@@ -1,28 +1,101 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Simple Button</title>
-    <style>
-        .button {
-            padding: 10px 20px;
-            background-color: #007bff;
-            color: #fff;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-    </style>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+
+#myInput {
+  box-sizing: border-box;
+  background-image: url('searchicon.png');
+  background-position: 14px 12px;
+  background-repeat: no-repeat;
+  font-size: 16px;
+  padding: 14px 20px 12px 45px;
+  border: none;
+  border-bottom: 1px solid #ddd;
+}
+
+#myInput:focus {outline: 3px solid #ddd;}
+
+.dropdown {
+  position: relative;
+  display: inline-block;
+}
+
+.dropdown-content {
+  display: none;
+  position: absolute;
+  background-color: #f6f6f6;
+  min-width: 230px;
+  overflow: auto;
+  border: 1px solid #ddd;
+  z-index: 1;
+}
+
+.dropdown-content a {
+  color: black;
+  padding: 12px 16px;
+  text-decoration: none;
+  display: block;
+}
+
+.dropdown a:hover {background-color: #ddd;}
+
+.show {display: block;}
+</style>
 </head>
 <body>
-    <button class="button" id="myButton">Click Here</button>
 
-    <script>
-        // Add event listener to the button
-        document.getElementById("myButton").addEventListener("click", function(event) {
-            // This function does nothing when the button is clicked
-        });
-    </script>
+<h2>Search/Filter Dropdown</h2>
+<p>Click on the button to open the dropdown menu, and use the input field to search for a specific dropdown link.</p>
+
+<div class="dropdown">
+  <div id="myDropdown" class="dropdown-content">
+    <input type="text" placeholder="Search.." id="myInput" onkeyup="filterFunction()">
+    <a href="#about">About</a>
+    <a href="#base">Base</a>
+    <a href="#blog">Blog</a>
+    <a href="#contact">Contact</a>
+    <a href="#custom">Custom</a>
+    <a href="#support">Support</a>
+    <a href="#tools">Tools</a>
+  </div>
+</div>
+
+<script>
+
+    window.onload = function() {
+        document.getElementById("myDropdown").classList.toggle("show");
+    }
+
+// ADDITIONAL CODE >>
+// Listen on the 'click' event inside the myDropdown element"
+document.querySelector("#myDropdown").addEventListener("click", e =>{
+  // If the click was triggered by an <a> element:
+  if (e.target.nodeName !== "A"){
+    return;
+  }
+  // Set the value of the selected text to the input value:
+  document.querySelector("#myInput").value = e.target.textContent;
+})
+// << ADDITIONAL CODE
+
+function filterFunction() {
+  var input, filter, ul, li, a, i;
+  input = document.getElementById("myInput");
+  filter = input.value.toUpperCase();
+  div = document.getElementById("myDropdown");
+  a = div.getElementsByTagName("a");
+  for (i = 0; i < a.length; i++) {
+    txtValue = a[i].textContent || a[i].innerText;
+    if (txtValue.toUpperCase().indexOf(filter) > -1) {
+      a[i].style.display = "";
+    } else {
+      a[i].style.display = "none";
+    }
+  }
+}
+</script>
+
 </body>
 </html>
