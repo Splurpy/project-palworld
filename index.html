@@ -7,14 +7,9 @@
 <body>
 
   <!--Now I can use anything from within pal.js-->
-  <script src="pal.js"></script>
-
+  <script src="js/pal.js"></script>
   <script>
-    let anubis_p = new Pal("Anubis");
-    let lifmunk_p = new Pal("Lifmunk");
-    let mammorest_p = new Pal("Mammorest");
-    let arsox_p = new Pal("Arsox");
-    let foxparks_p = new Pal("Foxparks");
+    
   </script>
 
 <div class="dropdown">
@@ -41,7 +36,8 @@ document.querySelector("#myDropdown").addEventListener("click", e =>{
     return;
   }
   // Set the value of the selected text to the input value:
-  document.querySelector("#myInput").value = e.target.getAttribute('data-pal');
+  document.querySelector("#myInput").value = e.target.textContent;
+  Pal.readPals();
 })
 
 function filterFunction() {
