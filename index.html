@@ -74,6 +74,10 @@
                         const palEntry = document.createElement('div');
                         palEntry.classList.add('palEntry');
 
+                        const palImg = document.createElement('img');
+                        palImg.src = `./resource/img/pal/${pal.name}.png`;
+                        palImg.classList.add('palImg');
+
                         const palName = document.createElement('div');
                         palName.classList.add('palName');
                         palName.textContent = pal.name;
@@ -95,6 +99,7 @@
                         }
 
                         palEntry.appendChild(palName);
+                        palEntry.appendChild(palImg);
                         palEntry.appendChild(elementCircle);
                         palEntry.appendChild(shineBox);
                         palContainer.appendChild(palEntry);
