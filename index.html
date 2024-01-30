@@ -82,25 +82,23 @@
                         palName.classList.add('palName');
                         palName.textContent = pal.name;
 
-                        const elementCircle = document.createElement('div');
-                        elementCircle.classList.add('elementCircle');
-
                         const shineBox = document.createElement('div');
                         palEntry.classList.add('shineBox');
 
-                        if (pal.elem1 !== 'none') {
-                            elementCircle.classList.add(pal.elem1);
-                        }
+                        const element = document.createElement('img');
+                        element.src = `./resource/img/elem/${pal.elem1}.png`;
+                        element.classList.add('element');
 
                         if (pal.elem2 !== 'none') {
-                            const dualElementCircle = document.createElement('div');
-                            dualElementCircle.classList.add('elementCircle', 'dual', pal.elem2);
-                            palEntry.appendChild(dualElementCircle);
+                            const element2 = document.createElement('img');
+                            element2.src = `./resource/img/elem/${pal.elem2}.png`;
+                            element2.classList.add('element', 'secondary');
+                            palEntry.appendChild(element2);
                         }
-
-                        palEntry.appendChild(palName);
+                        
                         palEntry.appendChild(palImg);
-                        palEntry.appendChild(elementCircle);
+                        palEntry.appendChild(element);
+                        palEntry.appendChild(palName);
                         palEntry.appendChild(shineBox);
                         palContainer.appendChild(palEntry);
                     });

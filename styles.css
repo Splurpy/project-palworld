@@ -93,47 +93,15 @@ body {
     right: 5px;
 }
 
+.element {
+    position: absolute;
+    top: 2px;
+    left: 268px;
+    height: 30px;
+}
+
 /* Additional circle for dual-element Pals */
-.elementCircle.dual {
-    top: 21px;
-}
-
-.elementCircle.dragon {
-    background-color: #aa00c1;
-}
-
-.elementCircle.fire {
-    background-color: #FF5733;
-}
-
-.elementCircle.water {
-    background-color: #3399FF;
-}
-
-.elementCircle.normal {
-    background-color: #ffaee3;
-}
-
-.elementCircle.leaf {
-    background-color: #66FF66;
-}
-
-.elementCircle.earth {
-    background-color: #c65200;
-}
-
-.elementCircle.ice {
-    background-color: #7abdff;
-}
-
-.elementCircle.electricity {
-    background-color: #fff200;
-}
-
-.elementCircle.dark {
-    background-color: #a7006c;
-}
-
-.elementCircle.none {
-    display: none;
+.element.secondary {
+    position: absolute;
+    top: 34px;
 }
