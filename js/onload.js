@@ -1,4 +1,3 @@
-// JavaScript code to dynamically generate Pal entries
 console.log('onload.js is executing');
 Pal.readPals()
     .then(palArray => {

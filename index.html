@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pal Entries</title>
+    <link rel="stylesheet" href="./styles.css">
+</head>
+<body>
+    <div id="palContainer" class="container"></div>
+    <script src="./dist/sql-wasm.js"></script>
+    <script>
+        // Configuration for SQL.js
+        const config = {
+            locateFile: filename => `/dist/${filename}`
+        };
+
+        // Main logic
+        initSqlJs(config).then(function(SQL) {
+            // Pal class definition
+            class Pal {
+                constructor(tieOrder, dexNum, name, rarity, elem1, elem2, sprintSpeed, breedPower) {
+                    this.tieOrder = tieOrder;
+                    this.dexNum = dexNum;
+                    this.name = name;
+                    this.rarity = rarity;
+                    this.elem1 = elem1;
+                    this.elem2 = elem2;
+                    this.sprintSpeed = sprintSpeed;
+                    this.breedPower = breedPower;
+                }
+
+                static async readPals() {
+                    try {
+                        const response = await fetch('../db/paldb.db');
+                        const buffer = await response.arrayBuffer();
+                        const db = new SQL.Database(new Uint8Array(buffer));
+                        const query = "SELECT pd.IndexOrder, bp.DexNum, bp.Name, pd.Rarity, pd.ElementType1, pd.ElementType2, pd.RideSprintSpeed, bp.Power FROM breeding_power bp JOIN pal_data pd ON bp.Name = pd.Name ORDER BY pd.IndexOrder ASC";
+                        const rows = db.exec(query);
+
+                        if (rows.length > 0) {
+                            const palArray = new Array(138);
+
+                            rows[0].values.forEach(row => {
+                                const [tieOrder, dexNum, name, rarity, elem1, elem2, sprintSpeed, breedPower] = row;
+                                const fElem1 = elem1.replace("EPalElementType::", "").toLowerCase();
+                                const fElem2 = elem2.replace("EPalElementType::", "").toLowerCase();
+                                palArray[tieOrder - 1] = new Pal(tieOrder, dexNum, name, rarity, fElem1, fElem2, sprintSpeed, breedPower);
+                            });
+
+                            console.log(`Successfully read ${palArray.length} entries`);
+                            return palArray;
+                        } else {
+                            console.log("No data retrieved");
+                            throw new Error("No data retrieved");
+                        }
+                    } catch (error) {
+                        console.error(error);
+                        throw error;
+                    }
+                }
+            }
+
+            (async function () {
+                try {
+                    const palArray = await Pal.readPals();
+                    const palContainer = document.getElementById('palContainer');
+
+                    palArray.forEach(pal => {
+                        const palLink = document.createElement('a');
+                        palLink.href = "#";
+                        palLink.classList.add('palLink');
+
+                        const palEntry = document.createElement('div');
+                        palEntry.classList.add('palEntry');
+
+                        const palName = document.createElement('div');
+                        palName.classList.add('palName');
+                        palName.textContent = pal.name;
+
+                        const elementCircle = document.createElement('div');
+                        elementCircle.classList.add('elementCircle');
+
+                        const shineBox = document.createElement('div');
+                        palEntry.classList.add('shineBox');
+
+                        if (pal.elem1 !== 'none') {
+                            elementCircle.classList.add(pal.elem1);
+                        }
+
+                        if (pal.elem2 !== 'none') {
+                            const dualElementCircle = document.createElement('div');
+                            dualElementCircle.classList.add('elementCircle', 'dual', pal.elem2);
+                            palEntry.appendChild(dualElementCircle);
+                        }
+
+                        palEntry.appendChild(palName);
+                        palEntry.appendChild(elementCircle);
+                        palEntry.appendChild(shineBox);
+                        palContainer.appendChild(palEntry);
+                    });
+                } catch (error) {
+                    console.error(error);
+                }
+            })();
+        });
+    </script>
+</body>
+</html>
