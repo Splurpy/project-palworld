@@ -17,7 +17,7 @@ class Pal {
         return new Promise((resolve, reject) => {
             const query = "SELECT pd.IndexOrder, bp.DexNum, bp.Name, pd.Rarity, pd.ElementType1, pd.ElementType2, pd.RideSprintSpeed, bp.Power FROM breeding_power bp JOIN pal_data pd ON bp.Name = pd.Name ORDER BY pd.IndexOrder ASC";
 
-            let db = new sqlite3.Database('../paldb.db', sqlite3.OPEN_READONLY, (err) => {
+            let db = new sqlite3.Database('../db/paldb.db', sqlite3.OPEN_READONLY, (err) => {
                 if (err) {
                     reject(err.message);
                 } else {
