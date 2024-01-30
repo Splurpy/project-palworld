@@ -71,8 +71,13 @@ body {
     height: 100px;
     bottom: 13px;
     left: 10px;
-    opacity: 80%;
+    opacity: 60%;
     z-index: 0;
+}
+
+.palEntry:hover .palImg {
+    opacity: 100%;
+    transition: 0.3s ease;
 }
 
 .elementCircle {
