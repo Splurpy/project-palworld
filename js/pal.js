@@ -1,4 +1,8 @@
-const sqlite3 = require('sqlite3').verbose();
+// Instead of using require
+// const sqlite3 = require('sqlite3').verbose();
+
+// Use ES6 module syntax
+import sqlite3 from 'sqlite3';
 
 class Pal {
 

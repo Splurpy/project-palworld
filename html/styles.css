@@ -1,0 +1,59 @@
+.container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+    padding: 20px;
+}
+
+.palEntry {
+    width: 100px;
+    height: 100px;
+    background-color: #333;
+    border-radius: 10px;
+    position: relative;
+}
+
+.palName {
+    position: absolute;
+    bottom: 10px;
+    left: 10px;
+    color: white;
+    font-size: 14px;
+}
+
+.elementCircle {
+    width: 20px;
+    height: 20px;
+    background-color: rgba(255, 255, 255, 0.5);
+    border-radius: 50%;
+    position: absolute;
+    top: 10px;
+    right: 10px;
+}
+
+/* Additional circle for dual-element Pals */
+.elementCircle.dual {
+    top: 40px;
+}
+
+.elementCircle.fire {
+    background-color: #FF5733;
+}
+
+.elementCircle.water {
+    background-color: #3399FF;
+}
+
+.elementCircle.earth {
+    background-color: #66FF66;
+}
+
+.elementCircle.air {
+    background-color: #66CCFF;
+}
+
+.elementCircle.none {
+    display: none;
+}
