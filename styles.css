@@ -139,3 +139,16 @@ body {
     overflow: scroll;
     overflow-x: hidden;
 }
+
+#palContainer::-webkit-scrollbar {
+    width: 13px; /* width of the scrollbar */
+}
+
+#palContainer::-webkit-scrollbar-track {
+    background: #7fa4e0; /* color of the track */
+}
+
+#palContainer::-webkit-scrollbar-thumb {
+    background: #4661ac; /* color of the scrollbar */
+    border-radius: 10px; /* roundness of the scrollbar */
+}
