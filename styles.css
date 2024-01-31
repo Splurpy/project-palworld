@@ -105,3 +105,37 @@ body {
     position: absolute;
     top: 34px;
 }
+
+.container {
+    height: 350px;
+    width: 650px;
+    margin: 0 auto;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-width: 3px;
+    border-radius: 8px;
+}
+
+.nested-panel {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-flow: column;
+}
+
+#searchBox {
+    width: 650px;
+    padding: 10px;
+    box-sizing: border-box;
+    border: 1px solid #ccc;
+    background-color: aliceblue;
+    border-radius: 5px;
+    margin-bottom: 20px;
+    font-family: Arial;
+    font-weight: 550;
+}
+
+#palContainer{
+    overflow: scroll;
+    overflow-x: hidden;
+}
