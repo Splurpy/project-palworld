@@ -101,10 +101,13 @@ body {
     left: 10px;
     opacity: 60%;
     z-index: 4;
+    user-select: none;
+    filter: drop-shadow(0px 00px 3px black);
 }
 
 .palEntry:hover .palImg {
     opacity: 100%;
+    filter: drop-shadow(0px 00px 6px black);
     transition: 0.3s ease-in-out;
 }
 
@@ -128,10 +131,13 @@ body {
     height: 30px;
     opacity: 70%;
     z-index: 6;
+    user-select: none;
+    filter: drop-shadow(0px 00px 3px black);
 }
 
 .palEntry:hover .element {
     opacity: 100%;
+    filter: drop-shadow(0px 00px 6px black);
     transition: 0.3s ease-in-out;
 }
 
@@ -143,36 +149,55 @@ body {
 
 .container {
     height: 350px;
-    width: 650px;
+    min-width: fit-content;
+    max-width: 650px;
     margin: 0 auto;
     padding: 10px;
-    border: 1px solid #ccc;
+    border: 1px solid #d1d7ff;
     border-width: 3px;
     border-radius: 8px;
 }
 
 .nested-panel {
     display: flex;
-    align-items: center;
-    justify-content: center;
+    align-items: left;
+    justify-content: left;
     flex-flow: column;
+    width: 374.8px;
+    max-width: 690.5px;
+    min-width: 400px;
+    border-style: solid;
+    border-color: rgb(167, 227, 255);
+    margin: 28px;
+    padding: 10px;
+    border-width: 2px;
+    border-radius: 10px;
+    overflow: hidden;
+    resize: horizontal;
 }
 
 #searchBox {
     width: 350px;
     padding: 10px;
     box-sizing: border-box;
-    border: 1px solid #ccc;
-    background-color: aliceblue;
-    border-radius: 5px;
-    margin-bottom: 20px;
-    font-family: Arial;
-    font-weight: 550;
+    color: white;
+    border: 2px solid #032a50;
+    background-color: #01172e;
+    border-radius: 8px;
+    margin-bottom: 10px;
+    font-family: 'Trebuchet MS';
+    font-weight: 900;
+}
+
+#searchBox::placeholder {
+    color: white;
 }
 
 #palContainer {
     overflow: scroll;
     overflow-x: hidden;
+    width: 93.7%;
+    min-width: 374.8px;
 }
 
 #palContainer::-webkit-scrollbar {
@@ -200,6 +225,8 @@ body {
     left: 116px;
     opacity: 60%;
     z-index: 6;
+    user-select: none;
+    filter: drop-shadow(0px 00px 2px black);
     transition: left 0.3s ease-in-out, top 0.3s ease-in-out; /* Add transition for smooth movement */
 }
 
@@ -210,6 +237,7 @@ body {
 .palEntry:hover .workImg {
     top: 65px;
     opacity: 100%;
+    filter: drop-shadow(0px 00px 3px black);
     transition: 0.3s ease-in-out;
 }
 
@@ -225,6 +253,7 @@ body {
     box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
     z-index: 4;
     background-color: #0e2741bd;
+    filter: drop-shadow(0px 00px 10px black);
     transition: top 0.3s ease-in-out, opacity 0.3s ease-in-out; /* Add transition for smooth movement */
 }
 
@@ -232,6 +261,7 @@ body {
     opacity: 100%;
     z-index: 5;
     top: 65px;
+    filter: drop-shadow(0px 00px 6px black);
     background-color: #0e2741;
 }
 
@@ -245,6 +275,7 @@ body {
     z-index: 5;
     font-family: monospace;
     font-style: italic;
+    user-select: none;
     text-shadow: 1px 1px 2px rgb(0, 0, 0), 0 0 1em rgb(0, 0, 0), 0 0 0.2em rgb(0, 0, 0);
 }
 
@@ -252,8 +283,7 @@ body {
     opacity: 70%;
     top: 4px;
     z-index: 4;
-    transition: 0.4s ease-in-out;
-    user-select: none;
+    transition: 0.5s ease-in-out;
 }
 
 .workLvl.kindling {
