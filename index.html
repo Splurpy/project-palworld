@@ -109,13 +109,15 @@
                                     palEntry.classList.add('shineBox');
 
                                     const element = document.createElement('img');
+                                    element.id = `${pal.name}.elem1`;
                                     element.src = `./resource/img/elem/${pal.elem1}.png`;
-                                    element.classList.add('element');
+                                    element.classList.add('element', `${pal.elem1}`);
 
                                     if (pal.elem2 !== 'none') {
                                         const element2 = document.createElement('img');
+                                        element2.id = `${pal.name}.elem2`;
                                         element2.src = `./resource/img/elem/${pal.elem2}.png`;
-                                        element2.classList.add('element', 'secondary');
+                                        element2.classList.add('element', 'secondary', `${pal.elem2}`);
                                         palEntry.appendChild(element2);
                                     }
 
@@ -200,8 +202,12 @@
                 palEntries = palContainer.getElementsByClassName("palEntry");
 
                 for (i = 0; i < palEntries.length; i++) {
-                    let elements = [palEntries[i].elem1, palEntries[i].elem2]
-                    console.log(elements);
+                    let palName = palEntries[i].getElementsByClassName("palName")[0];
+                    let elem1 = document.getElementById(`${palName.textContent}.elem1`);
+                    let elem2 = document.getElementById(`${palName.textContent}.elem2`);
+                    console.log(palName.textContent, elem1, elem2);
+
+
                 }
             }
         </script>
