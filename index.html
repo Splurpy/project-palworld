@@ -116,6 +116,10 @@
                                         palEntry.appendChild(element2);
                                     }
 
+                                    // new div for work plate
+                                    const workPlate = document.createElement('div');
+                                    workPlate.classList.add('workPlate');
+
                                     // Work Suitabilities
                                     const workImg = document.createElement('img');
                                     workImg.classList.add('workImg');
@@ -135,15 +139,18 @@
                                         }
                                         if (pal[work_suitabilities[i]] !== 0) {
                                             suitabilityImg.style.setProperty('--index', workImgIndex++);
+
+                                            const workLvl = document.createElement('p');
+                                            workLvl.innerText = pal[work_suitabilities[i]];
+
+                                            workLvl.classList.add('workLvl', work_suitabilities[i]);
+                                            workLvl.style.setProperty('--index', workImgIndex - 1);
                                             // console.log(`PAL: ${pal.name}\nworkImgIndex: ${workImgIndex - 1}`);
+                                            workPlate.appendChild(workLvl);
                                             palEntry.appendChild(suitabilityImg);
                                         }
 
                                     }
-
-                                    // new div for work plate
-                                    const workPlate = document.createElement('div');
-                                    workPlate.classList.add('workPlate');
 
 
                                     palEntry.appendChild(palImg);

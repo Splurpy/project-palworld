@@ -126,7 +126,7 @@ body {
     left: 268px;
     height: 30px;
     opacity: 70%;
-    z-index: 4;
+    z-index: 6;
 }
 
 .palEntry:hover .element {
@@ -207,7 +207,9 @@ body {
 }
 
 .palEntry:hover .workImg {
-    top: 61px;
+    top: 65px;
+    opacity: 100%;
+    transition: 0.3s ease-in-out;
 }
 
 .workPlate {
@@ -228,6 +230,74 @@ body {
 .palEntry:hover .workPlate {
     opacity: 100%;
     z-index: 5;
-    top: 60px;
+    top: 65px;
     background-color: #0e2741;
+}
+
+.workLvl {
+    --index: 0;
+    position: inherit;
+    top: -14px;
+    left: calc(6px + (27px * var(--index)));
+    font-size: 13.5px;
+    opacity: 0%;
+    z-index: 5;
+    font-family: 'Arial';
+    font-style: normal;
+}
+
+.palEntry:hover .workLvl {
+    opacity: 70%;
+    top: 5px;
+    z-index: 4;
+    font-style: italic;
+    transition: 0.5s ease-in-out;
+}
+
+.workLvl.kindling {
+    color: #DD643F;
+}
+
+.workLvl.watering {
+    color: #15F4FF;
+}
+
+.workLvl.planting {
+    color: #9CEF18;
+}
+
+.workLvl.cooling {
+    color: #8CF7FF;
+}
+
+.workLvl.farming {
+    color: #FFBD8C;
+}
+
+.workLvl.gathering {
+    color: #21D673;
+}
+
+.workLvl.genElec {
+    color: #FFDE00;
+}
+
+.workLvl.handiwork {
+    color: #FFE49F;
+}
+
+.workLvl.lumbering {
+    color: #C98231;
+}
+
+.workLvl.medicine {
+    color: #B3C65D;
+}
+
+.workLvl.mining {
+    color: #94A5D6;
+}
+
+.workLvl.transporting {
+    color: #D69C6B;
 }
