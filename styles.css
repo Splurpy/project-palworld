@@ -111,22 +111,9 @@ body {
     transition: 0.3s ease-in-out;
 }
 
-.elementCircle {
-    width: 9px;
-    height: 9px;
-    background-color: rgba(255, 255, 255, 0.5);
-    border-radius: 100%;
-    border-color: rgba(244, 244, 244, 0.337);
-    border-width: 2px;
-    border-style: solid;
-    position: absolute;
-    top: 7px;
-    right: 5px;
-}
-
 .element {
     position: absolute;
-    top: 2px;
+    top: 3.5px;
     left: 268px;
     height: 30px;
     opacity: 70%;
@@ -144,18 +131,7 @@ body {
 /* Additional circle for dual-element Pals */
 .element.secondary {
     position: absolute;
-    top: 34px;
-}
-
-.container {
-    height: 350px;
-    min-width: fit-content;
-    max-width: 650px;
-    margin: 0 auto;
-    padding: 10px;
-    border: 1px solid #d1d7ff;
-    border-width: 3px;
-    border-radius: 8px;
+    top: 34.5px;
 }
 
 .nested-panel {
@@ -174,9 +150,12 @@ body {
     border-radius: 10px;
     overflow: hidden;
     resize: horizontal;
+    background-color: #022a54;
 }
 
 #searchBox {
+    margin-left: auto;
+    margin-right: auto;
     width: 350px;
     padding: 10px;
     box-sizing: border-box;
@@ -196,8 +175,16 @@ body {
 #palContainer {
     overflow: scroll;
     overflow-x: hidden;
+    display: flex;
     width: 93.7%;
     min-width: 374.8px;
+    height: 350px;
+    max-width: 650px;
+    margin: 0 auto;
+    padding: 10px;
+    border: 1px solid #d1d7ff;
+    border-width: 3px;
+    border-radius: 8px;
 }
 
 #palContainer::-webkit-scrollbar {
@@ -332,4 +319,23 @@ body {
 
 .workLvl.transporting {
     color: #D69C6B;
+}
+
+.filtersButton {
+    position: relative;
+    display: flex;
+    margin-left: auto;
+    margin-right: auto;
+    height: 30px;
+    width: 12%;
+    bottom: 4.5px;
+    left: 4px;
+    background-color: white;
+    border-radius: 10px;
+    cursor: pointer;
+}
+
+.topPortion {
+    display: flex;
+    align-items: center;
 }

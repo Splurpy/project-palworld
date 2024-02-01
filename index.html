@@ -11,7 +11,10 @@
     <body>
         <div class="search-panel">
             <div class="nested-panel">
-                <input type="text" id="searchBox" placeholder="Pal Name..." oninput="filterPals()">
+                <div class="topPortion">
+                    <input type="text" id="searchBox" placeholder="Pal Name..." oninput="filterByName();">
+                    <div class="filtersButton" onclick="filterByElem();"></div>
+                </div>
                 <div id="palContainer" class="container"></div>
                 <script src="./dist/sql-wasm.js"></script>
                 <script>
@@ -126,7 +129,7 @@
 
                                     const work_suitabilities = ['kindling', 'watering', 'planting', 'genElec', 'handiwork', 'gathering', 'lumbering', 'mining', 'medicine', 'cooling', 'transporting', 'farming'];
 
-                                    console.log(`PAL: ${pal.name}\nMEDICINE:${pal.medicine}`);
+                                    // console.log(`PAL: ${pal.name}\nMEDICINE:${pal.medicine}`);
 
                                     let workImgIndex = 0;
                                     for (let i = 0; i < work_suitabilities.length; i++) {
@@ -170,7 +173,7 @@
         </div>
 
         <script>
-            function filterPals() {
+            function filterByName() {
                 var input, filter, palContainer, palEntries, i;
 
                 input = document.getElementById("searchBox");
@@ -190,6 +193,19 @@
                 }
             }
         </script>
+        <script>
+            function filterByElem() {
+                console.log('button clicked');
+                palContainer = document.getElementById("palContainer");
+                palEntries = palContainer.getElementsByClassName("palEntry");
+
+                for (i = 0; i < palEntries.length; i++) {
+                    let elements = [palEntries[i].elem1, palEntries[i].elem2]
+                    console.log(elements);
+                }
+            }
+        </script>
+
     </body>
 
 </html>
