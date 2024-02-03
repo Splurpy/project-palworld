@@ -13,9 +13,17 @@
             <div class="nested-panel">
                 <div class="topPortion">
                     <input type="text" id="searchBox" placeholder="Pal Name..." oninput="filterByName();">
-                    <div class="filtersButton" onclick="filterByElem();"></div>
                 </div>
-                <div id="palContainer" class="container"></div>
+                <div id="palContainer" class="container">
+                    <div class="filtersMenu">
+                        <div class="filtersMenuTab">
+                            <p class="tabArrow">
+                                &#9660;
+                            </p>
+                        </div>
+                        <div class="hideyMan"></div>
+                    </div>
+                </div>
                 <script src="./dist/sql-wasm.js"></script>
                 <script>
                     // Configuration for SQL.js
@@ -87,12 +95,10 @@
                             try {
                                 const palArray = await Pal.readPals();
                                 const palContainer = document.getElementById('palContainer');
+                                // Define a global variable to store the currently selected palEntry
+                                var selectedPalEntry = null;
 
                                 palArray.forEach(pal => {
-                                    const palLink = document.createElement('a');
-                                    palLink.tagName = `${pal.name}`;
-                                    palLink.href = "#"
-                                    palLink.classList.add('palLink');
 
                                     const palEntry = document.createElement('div');
                                     palEntry.classList.add('palEntry');
@@ -158,6 +164,19 @@
                                     }
 
 
+                                    palEntry.addEventListener('click', () => {
+                                        const currentPalEntry = event.currentTarget;
+                                        currentPalEntry.classList.toggle('selected');
+                                        if (selectedPalEntry && selectedPalEntry !== currentPalEntry) {
+                                            selectedPalEntry.classList.remove('selected');
+                                        }
+
+                                        selectedPalEntry = currentPalEntry.classList.contains('selected') ? currentPalEntry : null;
+                                    });
+
+
+
+
                                     palEntry.appendChild(palImg);
                                     palEntry.appendChild(element);
                                     palEntry.appendChild(palName);
@@ -207,11 +226,9 @@
                     let elem2 = document.getElementById(`${palName.textContent}.elem2`);
                     console.log(palName.textContent, elem1, elem2);
 
-
                 }
             }
         </script>
-
     </body>
 
 </html>

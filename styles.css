@@ -20,34 +20,10 @@
     transition: 0.3s ease-in-out;
 }
 
+.shineBox.selected:before,
 .shineBox:hover:before {
     background: rgba(255, 255, 255, 0.426);
     left: 0px;
-}
-
-.detailBox {
-    width: 100%;
-    height: 100%;
-    overflow: hidden;
-    border-radius: 10%;
-    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
-}
-
-.detailBox:before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 120px;
-    width: 110%;
-    height: 100%;
-    background: rgba(255, 255, 255, 0.3);
-    transform: skewX(-30deg);
-    transition: 0.3s ease-in-out;
-}
-
-.detailBox:hover:before {
-    background: rgba(255, 255, 255, 0.426);
-    left: 20px;
 }
 
 body {
@@ -74,6 +50,7 @@ body {
     position: relative;
 }
 
+.palEntry.selected,
 .palEntry:hover {
     box-shadow: 0px 0px 15px rgb(255, 255, 255);
     /* Add a white shadow */
@@ -105,6 +82,7 @@ body {
     filter: drop-shadow(0px 00px 3px black);
 }
 
+.palEntry.selected .palImg,
 .palEntry:hover .palImg {
     opacity: 100%;
     filter: drop-shadow(0px 00px 6px black);
@@ -113,15 +91,16 @@ body {
 
 .element {
     position: absolute;
-    top: 3.5px;
+    top: 4px;
     left: 268px;
-    height: 30px;
+    height: 29px;
     opacity: 70%;
     z-index: 6;
     user-select: none;
     filter: drop-shadow(0px 00px 3px black);
 }
 
+.palEntry.selected .element,
 .palEntry:hover .element {
     opacity: 100%;
     filter: drop-shadow(0px 00px 6px black);
@@ -131,7 +110,7 @@ body {
 /* Additional circle for dual-element Pals */
 .element.secondary {
     position: absolute;
-    top: 34.5px;
+    top: 33.5px;
 }
 
 .nested-panel {
@@ -217,10 +196,12 @@ body {
     transition: left 0.3s ease-in-out, top 0.3s ease-in-out; /* Add transition for smooth movement */
 }
 
+.palEntry.selected .workImg:not(:first-child),
 .palEntry:hover .workImg:not(:first-child) {
     left: calc(116px + (7px * var(--index)));
 }
 
+.palEntry.selected .workImg,
 .palEntry:hover .workImg {
     top: 65px;
     opacity: 100%;
@@ -244,6 +225,7 @@ body {
     transition: top 0.3s ease-in-out, opacity 0.3s ease-in-out; /* Add transition for smooth movement */
 }
 
+.palEntry.selected .workPlate,
 .palEntry:hover .workPlate {
     opacity: 100%;
     z-index: 5;
@@ -266,6 +248,7 @@ body {
     text-shadow: 1px 1px 2px rgb(0, 0, 0), 0 0 1em rgb(0, 0, 0), 0 0 0.2em rgb(0, 0, 0);
 }
 
+.palEntry.selected .workLvl,
 .palEntry:hover .workLvl {
     opacity: 70%;
     top: 4px;
@@ -321,21 +304,81 @@ body {
     color: #D69C6B;
 }
 
-.filtersButton {
-    position: relative;
-    display: flex;
-    margin-left: auto;
-    margin-right: auto;
-    height: 30px;
-    width: 12%;
-    bottom: 4.5px;
-    left: 4px;
-    background-color: white;
-    border-radius: 10px;
-    cursor: pointer;
-}
-
 .topPortion {
     display: flex;
     align-items: center;
+}
+
+.filtersMenu {
+    display: block;
+    background-color: #4661ac;
+    position: absolute;
+    height: 200px;
+    bottom: 261px; /* Initial position */
+    z-index: -1; /* Increase the z-index to be above the .filtersMenuTab */
+    width: 200px;
+    overflow: visible;
+    border-color: #7fa4e0;
+    border-style: solid;
+    border-radius: 10px;
+    transition: 0.3s ease-in-out;
+    box-shadow: 0px 0px 10px rgba(255, 255, 255, 0.316); /* Drop shadow */
+}
+
+.filtersMenu:hover {
+    bottom: 76px; /* Position when expanded */
+    box-shadow: 0px 0px 10px rgba(255, 255, 255, 0.819); /* Drop shadow */
+    transition: 0.3s ease-in-out;
+}
+
+.filtersMenuTab {
+    position: absolute;
+    bottom: -13px;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: #4661ac;
+    border-radius: 10px;
+    border-style: solid;
+    border-color: #7fa4e0;
+    height: 50px;
+    width: 100px;
+    box-shadow: 0px 0px 10px rgba(255, 255, 255, 0.316);
+    transition: 0.3s ease-in-out;
+}
+
+.filtersMenu:hover .filtersMenuTab {
+    box-shadow: 0px 0px 10px rgba(255, 255, 255, 0.819);
+    transition: 0.3s ease-in-out;
+}
+
+.hideyMan {
+    position: absolute;
+    bottom: 0px;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: inherit;
+    border-radius: 0px;
+    border-style: none;
+    height: 70px;
+    width: 140px;
+    transition: 0.3s ease-in-out;
+}
+
+.tabArrow {
+    position: absolute;
+    display: block;
+    font-size: 15px;
+    color: rgb(151, 195, 253);
+    top: 40%;
+    filter: drop-shadow();
+    text-align: center;
+    width: 100%;
+    filter: drop-shadow(0px 00px 3px rgb(0, 37, 85));
+    transition: 0.3s ease-in-out;
+}
+
+.filtersMenu:hover .tabArrow {
+    transform: rotateX(180deg);
+    top: 38%;
+    transition: 0.3s ease-in-out;
 }
