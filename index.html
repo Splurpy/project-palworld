@@ -9,8 +9,8 @@
     </head>
 
     <body>
-        <div class="search-wrapper">
-            <div class="search-panel">
+        <div class="searchWrapper">
+            <div class="searchPanel">
                 <div class="topPortion">
                     <input type="text" id="searchBox" placeholder="Pal Name..." oninput="filterByName();">
                 </div>
@@ -22,7 +22,6 @@
                         locateFile: filename => `/dist/${filename}`
                     };
 
-                    // Main logic
                     initSqlJs(config).then(function (SQL) {
                         // Pal class definition
                         class Pal {
@@ -51,6 +50,7 @@
                                 this.farming = farming;
                             }
 
+                            // Reading query as pal objects
                             static async readPals() {
                                 try {
                                     const response = await fetch('../db/paldb.db');
@@ -72,7 +72,7 @@
                                         console.log(`Successfully read ${palArray.length} entries`);
                                         return palArray;
                                     } else {
-                                        console.log("No data retrieved");
+                                        console.log("ERROR: No data retrieved");
                                         throw new Error("No data retrieved");
                                     }
                                 } catch (error) {
@@ -87,7 +87,7 @@
                                 const palArray = await Pal.readPals();
                                 const palContainer = document.getElementById('palContainer');
                                 // Define a global variable to store the currently selected palEntry
-                                var selectedPalEntry = null;
+                                let selectedPalEntry = null;
 
                                 palArray.forEach(pal => {
 
@@ -128,14 +128,11 @@
 
                                     const work_suitabilities = ['kindling', 'watering', 'planting', 'genElec', 'handiwork', 'gathering', 'lumbering', 'mining', 'medicine', 'cooling', 'transporting', 'farming'];
 
-                                    // console.log(`PAL: ${pal.name}\nMEDICINE:${pal.medicine}`);
-
                                     let workImgIndex = 0;
                                     for (let i = 0; i < work_suitabilities.length; i++) {
                                         const suitabilityImg = document.createElement('img');
                                         suitabilityImg.src = `./resource/img/work/${work_suitabilities[i]}.png`;
                                         suitabilityImg.classList.add('workImg', work_suitabilities[i]);
-                                        // suitabilityImg.style.setProperty('--lvl', pal[work_suitabilities[i]]);
                                         if (pal[work_suitabilities[i]] == 0) {
                                             suitabilityImg.style.filter = 'grayscale(100%)';
                                         }
@@ -147,7 +144,6 @@
 
                                             workLvl.classList.add('workLvl', work_suitabilities[i]);
                                             workLvl.style.setProperty('--index', workImgIndex - 1);
-                                            // console.log(`PAL: ${pal.name}\nworkImgIndex: ${workImgIndex - 1}`);
                                             workPlate.appendChild(workLvl);
                                             palEntry.appendChild(suitabilityImg);
                                         }
@@ -189,7 +185,18 @@
                             &#9660;
                         </p>
                     </div>
-                    <div class="hideyMan">
+                    <div class="hideyMan"></div>
+                    <div class="filterImage">
+                        <div class="filterTriangle">
+                            &#x25BC;
+
+                            <div class="filterBar">
+                                &#x2758;
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="filtersContainer container">
                     </div>
                 </div>
             </div>
@@ -197,7 +204,7 @@
 
         <script>
             function filterByName() {
-                var input, filter, palContainer, palEntries, i;
+                let input, filter, palContainer, palEntries, i;
 
                 input = document.getElementById("searchBox");
                 filter = input.value.toUpperCase();
@@ -205,8 +212,8 @@
                 palEntries = palContainer.getElementsByClassName("palEntry");
 
                 for (i = 0; i < palEntries.length; i++) {
-                    var palName = palEntries[i].getElementsByClassName("palName")[0];
-                    var txtValue = palName.textContent || palName.innerText;
+                    let palName = palEntries[i].getElementsByClassName("palName")[0];
+                    let txtValue = palName.textContent || palName.innerText;
 
                     if (txtValue.toUpperCase().indexOf(filter) > -1) {
                         palEntries[i].style.display = "";
@@ -218,7 +225,6 @@
         </script>
         <script>
             function filterByElem() {
-                console.log('button clicked');
                 palContainer = document.getElementById("palContainer");
                 palEntries = palContainer.getElementsByClassName("palEntry");
 
@@ -226,7 +232,6 @@
                     let palName = palEntries[i].getElementsByClassName("palName")[0];
                     let elem1 = document.getElementById(`${palName.textContent}.elem1`);
                     let elem2 = document.getElementById(`${palName.textContent}.elem2`);
-                    console.log(palName.textContent, elem1, elem2);
 
                 }
             }
