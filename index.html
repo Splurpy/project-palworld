@@ -9,21 +9,12 @@
     </head>
 
     <body>
-        <div class="search-panel">
-            <div class="nested-panel">
+        <div class="big-daddy">
+            <div class="search-panel">
                 <div class="topPortion">
                     <input type="text" id="searchBox" placeholder="Pal Name..." oninput="filterByName();">
                 </div>
-                <div id="palContainer" class="container">
-                    <div class="filtersMenu">
-                        <div class="filtersMenuTab">
-                            <p class="tabArrow">
-                                &#9660;
-                            </p>
-                        </div>
-                        <div class="hideyMan"></div>
-                    </div>
-                </div>
+                <div id="palContainer" class="container"></div>
                 <script src="./dist/sql-wasm.js"></script>
                 <script>
                     // Configuration for SQL.js
@@ -190,6 +181,17 @@
                         })();
                     });
                 </script>
+            </div>
+            <div class="filtersMenuHitbox">
+                <div class="filtersMenu">
+                    <div class="filtersMenuTab">
+                        <p class="tabArrow">
+                            &#9660;
+                        </p>
+                    </div>
+                    <div class="hideyMan">
+                    </div>
+                </div>
             </div>
         </div>
 
