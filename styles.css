@@ -370,12 +370,13 @@ body {
 
 .filterImage {
     user-select: none;
+    filter: drop-shadow(0px 00px 7px #4661ac);
     display: flex;
     position: relative;
     top: 10px;
     margin: auto;
     font-size: 116px;
-    color: #3d599f;
+    color: #375194;
 }
 
 .filterBar {
