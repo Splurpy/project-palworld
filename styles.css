@@ -405,14 +405,85 @@ body {
 }
 
 .filtersContainer {
-    gap: 10px;
+    display: block;
     position: absolute;
-    bottom: 0px;
+    bottom: 2px;
     width: inherit;
     height: inherit;
     max-height: 180px;
+    padding: 5px;
 }
 
 .filtersContainer::-webkit-scrollbar {
     width: 8px;
+}
+
+.elementFilterContainer {
+    display: flex;
+    justify-content: space-evenly;
+    gap: 10px;
+    position: relative;
+    margin-top: 10px;
+    margin-bottom: 5px;
+}
+
+.workFilterContainer {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-evenly;
+    gap: 10px;
+}
+
+.workFilterButtonWrapper {
+    bottom: -10px;
+    width: fit-content;
+    height: fit-content;
+}
+
+.workFilterButton,
+.elementFilterButton {
+    filter: grayscale(90%) drop-shadow(0px 00px 3px black);
+    position: relative;
+    opacity: 60%;
+    height: 26px;
+    transition: 0.3s ease-in-out;
+}
+
+.workFilterButton {
+    top: 0px;
+}
+
+.workFilterButtonWrapper.selected .workFilterButton,
+.elementFilterButton.selected {
+    filter: grayscale(0%) drop-shadow(0px 00px 6px black);
+    opacity: 100%;
+    transition: 0.3s ease-in-out;
+}
+
+.minLevelInput {
+    position: relative;
+    bottom: 9px;
+    opacity: 60%;
+    width: 40px;
+    height: 12px;
+    transition: 0.3s ease-in-out;
+    background-color: #4661ac;
+    border-radius: 10px;
+    font-size: 10px;
+    color: white;
+    text-align: center;
+}
+
+.minLevelInput::placeholder {
+    opacity: 60%;
+    transition: 0.3s ease-in-out;
+    font-size: 10px;
+    font-style: italic;
+    color: white;
+}
+
+.workFilterButtonWrapper.selected .minLevelInput,
+.workFilterButtonWrapper.selected .minLevelInput::placeholder {
+    opacity: 100%;
+    transition: 0.3s ease-in-out;
 }

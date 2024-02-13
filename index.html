@@ -12,7 +12,7 @@
         <div class="searchWrapper">
             <div class="searchPanel">
                 <div class="topPortion">
-                    <input type="text" id="searchBox" placeholder="Pal Name..." oninput="filterByName();">
+                    <input type="text" id="searchBox" placeholder="Pal Name..." oninput="filterResults();">
                 </div>
                 <div id="palContainer" class="container"></div>
                 <script src="./dist/sql-wasm.js"></script>
@@ -69,10 +69,10 @@
                                             palArray[tieOrder - 1] = new Pal(tieOrder, dexNum, name, rarity, fElem1, fElem2, sprintSpeed, breedPower, kindling, watering, planting, genElec, handiwork, gathering, lumbering, mining, medicine, cooling, transporting, farming);
                                         });
 
-                                        console.log(`Successfully read ${palArray.length} entries`);
+                                        console.log(`[DEBUG] Successfully read ${palArray.length} entries`);
                                         return palArray;
                                     } else {
-                                        console.log("ERROR: No data retrieved");
+                                        console.log("[DEBUG] ERROR: No data retrieved");
                                         throw new Error("No data retrieved");
                                     }
                                 } catch (error) {
@@ -171,6 +171,7 @@
                                     palEntry.appendChild(workPlate);
                                     palContainer.appendChild(palEntry);
                                 });
+                                addFilters();
                             } catch (error) {
                                 console.error(error);
                             }
@@ -197,44 +198,160 @@
                         </div>
                     </div>
                     <div class="filtersContainer container">
+                        <div class="elementFilterContainer"></div>
+                        <div class="workFilterContainer"></div>
                     </div>
                 </div>
             </div>
         </div>
-
         <script>
-            function filterByName() {
+            function addFilters() {
+
+                const work_suitabilities = ['kindling', 'watering', 'planting', 'genElec', 'handiwork', 'gathering', 'lumbering', 'mining', 'medicine', 'cooling', 'transporting', 'farming'];
+                const elements = ['fire', 'water', 'leaf', 'earth', 'electricity', 'normal', 'dark', 'ice', 'dragon'];
+
+                let filtersContainer = document.getElementsByClassName('filtersContainer')[0];
+                let elementFilterContainer = filtersContainer.getElementsByClassName('elementFilterContainer')[0];
+                let workFilterContainer = filtersContainer.getElementsByClassName('workFilterContainer')[0];
+
+                elements.forEach(function (elementValue) {
+
+                    let elementFilterButton = document.createElement('img');
+                    elementFilterButton.src = `./resource/img/elem/${elementValue}.png`;
+                    elementFilterButton.classList.add('elementFilterButton', `${elementValue}`);
+
+                    elementFilterButton.addEventListener('click', () => {
+                        elementFilterButton.classList.toggle('selected');
+                        filterResults(); // Trigger filtering algorithm
+                    });
+
+
+                    elementFilterContainer.appendChild(elementFilterButton);
+                });
+
+                work_suitabilities.forEach(function (suitability) {
+                    let workFilterButtonWrapper = document.createElement('div');
+                    workFilterButtonWrapper.classList.add('workFilterButtonWrapper');
+
+                    let workFilterButton = document.createElement('img');
+                    workFilterButton.src = `./resource/img/work/${suitability}.png`;
+                    workFilterButton.classList.add('workFilterButton', `${suitability}`);
+                    workFilterButtonWrapper.appendChild(workFilterButton);
+
+                    workFilterButton.addEventListener('click', () => {
+                        event.target.parentElement.classList.toggle('selected');
+                        filterResults();
+                    });
+
+                    let minLevelInput = document.createElement('input');
+                    minLevelInput.placeholder = '0';
+                    minLevelInput.maxLength = 1;
+                    minLevelInput.onkeydown = function handleKeys(e) {
+                        let acceptedKeys = [8, 37, 38, 39, 40, 49, 50, 51, 52];
+                        if (!acceptedKeys.includes(e.keyCode)) e.preventDefault();
+                        else if (this.value.length === 1 || this.value.length === 0) {
+                            // e.preventDefault();
+                            switch (e.keyCode) {
+                                case 8:
+                                    this.value = '';
+                                    break;
+                                case 39:
+                                case 38:
+                                    if (parseInt(this.value) < 4) this.value = parseInt(this.value) + 1;
+                                    else if (this.value.length === 0) this.value = 1;
+                                    break;
+                                case 37:
+                                case 40:
+                                    if (parseInt(this.value) > 1) this.value = parseInt(this.value) - 1;
+                                    else if (parseInt(this.value) === 1) this.value = '';
+                                    break;
+                            }
+                        };
+                    };
+
+                    minLevelInput.addEventListener('keydown', () => {
+                        if (event.target.parentElement.classList.contains('selected')) filterResults();
+                    })
+
+                    minLevelInput.classList.add('minLevelInput', `${suitability}`);
+                    workFilterButtonWrapper.appendChild(minLevelInput);
+                    workFilterContainer.appendChild(workFilterButtonWrapper);
+                });
+
+
+            }
+        </script>
+        <script>
+            function filterResults() {
+                console.log('[DEBUG] filtering entries');
                 let input, filter, palContainer, palEntries, i;
 
                 input = document.getElementById("searchBox");
                 filter = input.value.toUpperCase();
                 palContainer = document.getElementById("palContainer");
                 palEntries = palContainer.getElementsByClassName("palEntry");
+                let selectedElements = document.querySelectorAll('.elementFilterButton.selected');
+                let selectedWorkFilters = document.querySelectorAll('.workFilterButtonWrapper.selected');
 
                 for (i = 0; i < palEntries.length; i++) {
                     let palName = palEntries[i].getElementsByClassName("palName")[0];
                     let txtValue = palName.textContent || palName.innerText;
+                    let shouldDisplay = true;
+                    let conditions = [];
 
-                    if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                    // Check if the pal entry matches the search filter
+                    if (txtValue.toUpperCase().indexOf(filter) === -1) {
+                        conditions.push(false);
+                    }
+
+                    // Filter by element
+                    selectedElements.forEach(selectedElement => {
+                        let elem1 = document.getElementById(`${palName.textContent}.elem1`);
+                        let elem2 = document.getElementById(`${palName.textContent}.elem2`);
+
+                        if (!(elem1 && elem1.classList.contains(selectedElement.classList[1])) &&
+                            !(elem2 && elem2.classList.contains(selectedElement.classList[1]))) {
+                            conditions.push(false);
+                        }
+                    });
+
+                    // Filter by work suitability + level
+                    // For each wrapper, get its type and minimum level - DONE
+                    // Then, compare that min level to the current palEntry's level for that type - DONE
+                    // Set shouldDisplay accordingly - WIP, Currently operates only based on most recent one, collect all into an array and if any are false, set false
+                    let currPal = palEntries[i];
+                    let workPlate = currPal.getElementsByClassName('workPlate')[0];
+                    selectedWorkFilters.forEach(workWrapper => {
+                        let inputBox = workWrapper.getElementsByClassName('minLevelInput')[0];
+                        let minLvl = inputBox.value;
+                        if (!inputBox.value) minLvl = 0;
+
+                        // TODO SECOND HALF OF FILTERING LOGIC
+                        let workEntry = workPlate.getElementsByClassName(`${inputBox.classList[1]}`);
+                        workEntry = workEntry[0];
+                        // If this palEntry has the following selected workType
+                        if (workEntry) {
+                            let workLvl = workEntry.textContent;
+                            // console.log(`[DEBUG] ${workEntry.classList[1]} -> ${workLvl}`);
+                            if (workLvl >= minLvl) conditions.push(true);
+                            else conditions.push(false);
+                        } else {
+                            conditions.push(false);
+                        }
+                    });
+
+                    // Display entry if it contains adequate levels
+                    if (conditions.includes(false)) shouldDisplay = false;
+
+                    // Update the display of the pal entry
+                    if (shouldDisplay) {
                         palEntries[i].style.display = "";
                     } else {
                         palEntries[i].style.display = "none";
                     }
                 }
             }
-        </script>
-        <script>
-            function filterByElem() {
-                palContainer = document.getElementById("palContainer");
-                palEntries = palContainer.getElementsByClassName("palEntry");
 
-                for (i = 0; i < palEntries.length; i++) {
-                    let palName = palEntries[i].getElementsByClassName("palName")[0];
-                    let elem1 = document.getElementById(`${palName.textContent}.elem1`);
-                    let elem2 = document.getElementById(`${palName.textContent}.elem2`);
-
-                }
-            }
         </script>
     </body>
 
