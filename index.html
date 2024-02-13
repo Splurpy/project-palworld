@@ -17,8 +17,9 @@
                 </div>
                 <div id="palContainer" class="container palContainer"></div>
                 <script src="./dist/sql-wasm.js"></script>
-                <script>
-                    // Configuration for SQL.js
+                <script> // Configuration for SQL.js
+                    var palArray = new Array();
+                    var uniqueCombos = new Array();
                     const config = {
                         locateFile: filename => `/dist/${filename}`
                     };
@@ -61,7 +62,6 @@
                                     const rows = db.exec(query);
 
                                     if (rows.length > 0) {
-                                        const palArray = new Array(138);
 
                                         rows[0].values.forEach(row => {
                                             const [tieOrder, dexNum, name, rarity, elem1, elem2, sprintSpeed, breedPower, kindling, watering, planting, genElec, handiwork, gathering, lumbering, mining, medicine, cooling, transporting, farming] = row;
@@ -71,7 +71,6 @@
                                         });
 
                                         console.log(`[DEBUG] Successfully read ${palArray.length} entries`);
-                                        return palArray;
                                     } else {
                                         console.log("[DEBUG] ERROR: No data retrieved");
                                         throw new Error("No data retrieved");
@@ -80,12 +79,25 @@
                                     console.error(error);
                                     throw error;
                                 }
+
+                                const response = await fetch('../db/paldb.db');
+                                const buffer = await response.arrayBuffer();
+                                const db = new SQL.Database(new Uint8Array(buffer));
+                                const query = "SELECT * FROM unique_combos";
+                                const rows = db.exec(query);
+
+                                if (rows.length > 0) {
+                                    rows[0].values.forEach(row => {
+                                        const [parent1, parent2, child] = row;
+                                        uniqueCombos.push([parent1, parent2, child]);
+                                    });
+                                }
                             }
                         }
 
                         (async function () {
                             try {
-                                const palArray = await Pal.readPals();
+                                await Pal.readPals();
                                 const palContainer = document.getElementById('palContainer');
                                 let selectedPalEntry1 = null;
                                 let selectedPalEntry2 = null;
@@ -118,6 +130,9 @@
                                         element2.classList.add('element', 'secondary', `${pal.elem2}`);
                                         palEntry.appendChild(element2);
                                     }
+
+                                    // Breeding power
+                                    palEntry.setAttribute('data-breedPower', pal.breedPower);
 
                                     // new div for work plate
                                     const workPlate = document.createElement('div');
@@ -195,13 +210,13 @@
                 </div>
             </div>
         </div>
+        <div class="resultField" onclick="calculateResult();">blank</div>
         <script>
             function addFilters() {
                 const work_suitabilities = ['kindling', 'watering', 'planting', 'genElec', 'handiwork', 'gathering', 'lumbering', 'mining', 'medicine', 'cooling', 'transporting', 'farming'];
                 const elements = ['fire', 'water', 'leaf', 'earth', 'electricity', 'normal', 'dark', 'ice', 'dragon'];
 
                 let wrappers = document.querySelectorAll('.searchWrapper');
-                // console.log(wrappers);
                 wrappers.forEach(function (wrapper) {
                     let filtersContainer = wrapper.getElementsByClassName('filtersContainer')[0];
                     let elementFilterContainer = filtersContainer.getElementsByClassName('elementFilterContainer')[0];
@@ -278,7 +293,6 @@
             function filterResults(wrapper) {
                 console.log('[DEBUG] filtering entries');
                 let input, filter, palContainer, palEntries, i;
-                // console.log(wrapper);
                 input = wrapper.getElementsByClassName("searchBox")[0];
                 filter = input.value.toUpperCase();
                 palContainer = wrapper.getElementsByClassName("palContainer")[0];
@@ -326,7 +340,6 @@
                         // If this palEntry has the following selected workType
                         if (workEntry) {
                             let workLvl = workEntry.textContent;
-                            // console.log(`[DEBUG] ${workEntry.classList[1]} -> ${workLvl}`);
                             if (workLvl >= minLvl) conditions.push(true);
                             else conditions.push(false);
                         } else {
@@ -363,7 +376,6 @@
                             }
 
                             selectedPalEntry = currentPalEntry.classList.contains('selected') ? currentPalEntry : null;
-                            // console.log(selectedPalEntry);
                             if (i == 0) {
                                 selectedPalEntry1 = selectedPalEntry;
                             } else {
@@ -373,6 +385,50 @@
                         });
                     });
                 });
+            }
+        </script>
+        <script>
+
+            // Array of combos (Length 3 array of parent1, parent2, and child)
+            // Pass in parent1 and parent2 as palNames (strings), return null if not unique combo
+            function getUniqueCombo(parent1, parent2) {
+                let result = null;
+                uniqueCombos.forEach((combo) => {
+                    let parents = [combo[0], combo[1]];
+                    if (parents.includes(parent1) && parents.includes(parent2)) {
+                        result = combo[2];
+                    }
+                });
+
+                return result;
+            }
+
+            function calculateResult() {
+                let field = document.getElementsByClassName('resultField')[0];
+                let selectedPals = [];
+                selectedPals = Array.from(document.getElementsByClassName('palEntry selected'));
+
+                // Two pals have NOT yet been selected
+                if (selectedPals.length < 2) return;
+                // Two pals have been selected
+                else {
+                    let palNames = [selectedPals[0].getElementsByClassName('palName')[0].textContent, selectedPals[1].getElementsByClassName('palName')[0].textContent];
+                    let unique;
+                    unique = getUniqueCombo(palNames[0], palNames[1]);
+                    if (unique) field.textContent = unique;
+                    else {
+                        let breedPowers = selectedPals.map((palEntry) => palEntry.getAttribute('data-breedPower'));
+                        let resultBreedPower = Math.floor((parseInt(breedPowers[0]) + parseInt(breedPowers[1]) + 1) / 2);
+
+                        let allBreedPowers = palArray.map((pal) => pal.breedPower);
+
+                        let nearest = allBreedPowers.reduce(function (prev, curr) {
+                            return (Math.abs(curr - resultBreedPower) < Math.abs(prev - resultBreedPower) ? curr : prev);
+                        });
+
+                        field.textContent = palArray[allBreedPowers.indexOf(nearest)].name;
+                    }
+                }
             }
         </script>
     </body>

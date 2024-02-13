@@ -1,8 +1,9 @@
 body {
     display: flex;
-    background-color: #011f3d;
-    gap: 10px;
+    flex-wrap: wrap;
     justify-content: center;
+    gap: 10px;
+    background-color: #011f3d;
 }
 
 body::-webkit-scrollbar {
@@ -506,4 +507,18 @@ body::-webkit-scrollbar-thumb {
 .workFilterButtonWrapper.selected .minLevelInput::placeholder {
     opacity: 100%;
     transition: 0.3s ease-in-out;
+}
+
+.resultField {
+    order: 3;
+    width: 250px;
+    height: 125px;
+    margin-top: auto;
+    margin-right: 10px;
+    margin-bottom: auto;
+    margin-left: 10px;
+    background-color: #7fa4e0;
+    border-radius: 10px;
+    color: white;
+    text-align: center;
 }
