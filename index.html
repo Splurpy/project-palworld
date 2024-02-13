@@ -12,9 +12,10 @@
         <div class="searchWrapper">
             <div class="searchPanel">
                 <div class="topPortion">
-                    <input type="text" id="searchBox" placeholder="Pal Name..." oninput="filterResults();">
+                    <input type="text" class="searchBox" id="searchBox" placeholder="Pal Name..."
+                        oninput="filterResults(this.parentElement.parentElement);">
                 </div>
-                <div id="palContainer" class="container"></div>
+                <div id="palContainer" class="container palContainer"></div>
                 <script src="./dist/sql-wasm.js"></script>
                 <script>
                     // Configuration for SQL.js
@@ -86,8 +87,8 @@
                             try {
                                 const palArray = await Pal.readPals();
                                 const palContainer = document.getElementById('palContainer');
-                                // Define a global variable to store the currently selected palEntry
-                                let selectedPalEntry = null;
+                                let selectedPalEntry1 = null;
+                                let selectedPalEntry2 = null;
 
                                 palArray.forEach(pal => {
 
@@ -150,20 +151,6 @@
 
                                     }
 
-
-                                    palEntry.addEventListener('click', () => {
-                                        const currentPalEntry = event.currentTarget;
-                                        currentPalEntry.classList.toggle('selected');
-                                        if (selectedPalEntry && selectedPalEntry !== currentPalEntry) {
-                                            selectedPalEntry.classList.remove('selected');
-                                        }
-
-                                        selectedPalEntry = currentPalEntry.classList.contains('selected') ? currentPalEntry : null;
-                                    });
-
-
-
-
                                     palEntry.appendChild(palImg);
                                     palEntry.appendChild(element);
                                     palEntry.appendChild(palName);
@@ -171,7 +158,11 @@
                                     palEntry.appendChild(workPlate);
                                     palContainer.appendChild(palEntry);
                                 });
+                                let searchWrapper1 = document.querySelector('.searchWrapper');
+                                let searchWrapper2 = searchWrapper1.cloneNode(true);
+                                document.body.appendChild(searchWrapper2);
                                 addFilters();
+                                addSelectHandlers([searchWrapper1, searchWrapper2]);
                             } catch (error) {
                                 console.error(error);
                             }
@@ -206,95 +197,98 @@
         </div>
         <script>
             function addFilters() {
-
                 const work_suitabilities = ['kindling', 'watering', 'planting', 'genElec', 'handiwork', 'gathering', 'lumbering', 'mining', 'medicine', 'cooling', 'transporting', 'farming'];
                 const elements = ['fire', 'water', 'leaf', 'earth', 'electricity', 'normal', 'dark', 'ice', 'dragon'];
 
-                let filtersContainer = document.getElementsByClassName('filtersContainer')[0];
-                let elementFilterContainer = filtersContainer.getElementsByClassName('elementFilterContainer')[0];
-                let workFilterContainer = filtersContainer.getElementsByClassName('workFilterContainer')[0];
+                let wrappers = document.querySelectorAll('.searchWrapper');
+                // console.log(wrappers);
+                wrappers.forEach(function (wrapper) {
+                    let filtersContainer = wrapper.getElementsByClassName('filtersContainer')[0];
+                    let elementFilterContainer = filtersContainer.getElementsByClassName('elementFilterContainer')[0];
+                    let workFilterContainer = filtersContainer.getElementsByClassName('workFilterContainer')[0];
 
-                elements.forEach(function (elementValue) {
+                    elements.forEach(function (elementValue) {
 
-                    let elementFilterButton = document.createElement('img');
-                    elementFilterButton.src = `./resource/img/elem/${elementValue}.png`;
-                    elementFilterButton.classList.add('elementFilterButton', `${elementValue}`);
+                        let elementFilterButton = document.createElement('img');
+                        elementFilterButton.src = `./resource/img/elem/${elementValue}.png`;
+                        elementFilterButton.classList.add('elementFilterButton', `${elementValue}`);
 
-                    elementFilterButton.addEventListener('click', () => {
-                        elementFilterButton.classList.toggle('selected');
-                        filterResults(); // Trigger filtering algorithm
+                        elementFilterButton.addEventListener('click', () => {
+                            elementFilterButton.classList.toggle('selected');
+                            filterResults(wrapper); // Trigger filtering algorithm
+                        });
+
+
+                        elementFilterContainer.appendChild(elementFilterButton);
                     });
 
+                    work_suitabilities.forEach(function (suitability) {
+                        let workFilterButtonWrapper = document.createElement('div');
+                        workFilterButtonWrapper.classList.add('workFilterButtonWrapper');
 
-                    elementFilterContainer.appendChild(elementFilterButton);
-                });
+                        let workFilterButton = document.createElement('img');
+                        workFilterButton.src = `./resource/img/work/${suitability}.png`;
+                        workFilterButton.classList.add('workFilterButton', `${suitability}`);
+                        workFilterButtonWrapper.appendChild(workFilterButton);
 
-                work_suitabilities.forEach(function (suitability) {
-                    let workFilterButtonWrapper = document.createElement('div');
-                    workFilterButtonWrapper.classList.add('workFilterButtonWrapper');
+                        workFilterButton.addEventListener('click', () => {
+                            event.target.parentElement.classList.toggle('selected');
+                            filterResults(wrapper);
+                        });
 
-                    let workFilterButton = document.createElement('img');
-                    workFilterButton.src = `./resource/img/work/${suitability}.png`;
-                    workFilterButton.classList.add('workFilterButton', `${suitability}`);
-                    workFilterButtonWrapper.appendChild(workFilterButton);
-
-                    workFilterButton.addEventListener('click', () => {
-                        event.target.parentElement.classList.toggle('selected');
-                        filterResults();
-                    });
-
-                    let minLevelInput = document.createElement('input');
-                    minLevelInput.placeholder = '0';
-                    minLevelInput.maxLength = 1;
-                    minLevelInput.onkeydown = function handleKeys(e) {
-                        let acceptedKeys = [8, 37, 38, 39, 40, 49, 50, 51, 52];
-                        if (!acceptedKeys.includes(e.keyCode)) e.preventDefault();
-                        else if (this.value.length === 1 || this.value.length === 0) {
-                            // e.preventDefault();
-                            switch (e.keyCode) {
-                                case 8:
-                                    this.value = '';
-                                    break;
-                                case 39:
-                                case 38:
-                                    if (parseInt(this.value) < 4) this.value = parseInt(this.value) + 1;
-                                    else if (this.value.length === 0) this.value = 1;
-                                    break;
-                                case 37:
-                                case 40:
-                                    if (parseInt(this.value) > 1) this.value = parseInt(this.value) - 1;
-                                    else if (parseInt(this.value) === 1) this.value = '';
-                                    break;
-                            }
+                        let minLevelInput = document.createElement('input');
+                        minLevelInput.placeholder = '0';
+                        minLevelInput.maxLength = 1;
+                        minLevelInput.onkeydown = function handleKeys(e) {
+                            let acceptedKeys = [8, 37, 38, 39, 40, 49, 50, 51, 52];
+                            if (!acceptedKeys.includes(e.keyCode)) e.preventDefault();
+                            else if (this.value.length === 1 || this.value.length === 0) {
+                                // e.preventDefault();
+                                switch (e.keyCode) {
+                                    case 8:
+                                        this.value = '';
+                                        break;
+                                    case 39:
+                                    case 38:
+                                        if (parseInt(this.value) < 4) this.value = parseInt(this.value) + 1;
+                                        else if (this.value.length === 0) this.value = 1;
+                                        break;
+                                    case 37:
+                                    case 40:
+                                        if (parseInt(this.value) > 1) this.value = parseInt(this.value) - 1;
+                                        else if (parseInt(this.value) === 1) this.value = '';
+                                        break;
+                                }
+                            };
                         };
-                    };
 
-                    minLevelInput.addEventListener('keydown', () => {
-                        if (event.target.parentElement.classList.contains('selected')) filterResults();
-                    })
+                        minLevelInput.addEventListener('keydown', () => {
+                            if (event.target.parentElement.classList.contains('selected')) filterResults(wrapper);
+                        })
 
-                    minLevelInput.classList.add('minLevelInput', `${suitability}`);
-                    workFilterButtonWrapper.appendChild(minLevelInput);
-                    workFilterContainer.appendChild(workFilterButtonWrapper);
-                });
+                        minLevelInput.classList.add('minLevelInput', `${suitability}`);
+                        workFilterButtonWrapper.appendChild(minLevelInput);
+                        workFilterContainer.appendChild(workFilterButtonWrapper);
+                    });
 
-
+                })
             }
         </script>
         <script>
-            function filterResults() {
+            function filterResults(wrapper) {
                 console.log('[DEBUG] filtering entries');
                 let input, filter, palContainer, palEntries, i;
-
-                input = document.getElementById("searchBox");
+                // console.log(wrapper);
+                input = wrapper.getElementsByClassName("searchBox")[0];
                 filter = input.value.toUpperCase();
-                palContainer = document.getElementById("palContainer");
+                palContainer = wrapper.getElementsByClassName("palContainer")[0];
                 palEntries = palContainer.getElementsByClassName("palEntry");
-                let selectedElements = document.querySelectorAll('.elementFilterButton.selected');
-                let selectedWorkFilters = document.querySelectorAll('.workFilterButtonWrapper.selected');
+                let selectedElements = wrapper.querySelectorAll('.elementFilterButton.selected');
+                let selectedWorkFilters = wrapper.querySelectorAll('.workFilterButtonWrapper.selected');
 
                 for (i = 0; i < palEntries.length; i++) {
-                    let palName = palEntries[i].getElementsByClassName("palName")[0];
+                    let currEntry = palEntries[i];
+                    let palName = currEntry.getElementsByClassName("palName")[0];
                     let txtValue = palName.textContent || palName.innerText;
                     let shouldDisplay = true;
                     let conditions = [];
@@ -306,8 +300,8 @@
 
                     // Filter by element
                     selectedElements.forEach(selectedElement => {
-                        let elem1 = document.getElementById(`${palName.textContent}.elem1`);
-                        let elem2 = document.getElementById(`${palName.textContent}.elem2`);
+                        let elem1 = currEntry.getElementsByClassName(`element`)[0];
+                        let elem2 = currEntry.getElementsByClassName(`element`)[1];
 
                         if (!(elem1 && elem1.classList.contains(selectedElement.classList[1])) &&
                             !(elem2 && elem2.classList.contains(selectedElement.classList[1]))) {
@@ -352,6 +346,34 @@
                 }
             }
 
+        </script>
+        <script>
+            function addSelectHandlers(wrappers) {
+                wrappers.forEach(function (wrapper, i) {
+                    let palContainer = wrapper.getElementsByClassName("palContainer")[0];
+                    let palEntries = Array.from(palContainer.getElementsByClassName("palEntry"));
+                    palEntries.forEach(palEntry => {
+
+                        palEntry.addEventListener('click', () => {
+                            const currentPalEntry = event.currentTarget;
+                            currentPalEntry.classList.toggle('selected');
+                            let selectedPalEntry = eval(`this.selectedPalEntry${i + 1}`);
+                            if (selectedPalEntry && selectedPalEntry !== currentPalEntry) {
+                                selectedPalEntry.classList.remove('selected');
+                            }
+
+                            selectedPalEntry = currentPalEntry.classList.contains('selected') ? currentPalEntry : null;
+                            // console.log(selectedPalEntry);
+                            if (i == 0) {
+                                selectedPalEntry1 = selectedPalEntry;
+                            } else {
+                                selectedPalEntry2 = selectedPalEntry;
+                            }
+                            console.log(`[DEBUG] 1: ${this.selectedPalEntry1} | 2: ${this.selectedPalEntry2}`);
+                        });
+                    });
+                });
+            }
         </script>
     </body>
 
