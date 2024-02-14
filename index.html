@@ -210,7 +210,7 @@
                 </div>
             </div>
         </div>
-        <div class="resultField" onclick="calculateResult();">blank</div>
+        <div class="resultField"></div>
         <script>
             function addFilters() {
                 const work_suitabilities = ['kindling', 'watering', 'planting', 'genElec', 'handiwork', 'gathering', 'lumbering', 'mining', 'medicine', 'cooling', 'transporting', 'farming'];
@@ -382,6 +382,7 @@
                                 selectedPalEntry2 = selectedPalEntry;
                             }
                             console.log(`[DEBUG] 1: ${this.selectedPalEntry1} | 2: ${this.selectedPalEntry2}`);
+                            calculateResult();
                         });
                     });
                 });
@@ -395,7 +396,7 @@
                 let result = null;
                 uniqueCombos.forEach((combo) => {
                     let parents = [combo[0], combo[1]];
-                    if (parents.includes(parent1) && parents.includes(parent2)) {
+                    if ((parents[0] === parent1 && parents[1] === parent2) || (parents[0] === parent2 && parents[1] === parent1)) {
                         result = combo[2];
                     }
                 });
@@ -409,7 +410,7 @@
                 selectedPals = Array.from(document.getElementsByClassName('palEntry selected'));
 
                 // Two pals have NOT yet been selected
-                if (selectedPals.length < 2) return;
+                if (selectedPals.length < 2) field.textContent = '';
                 // Two pals have been selected
                 else {
                     let palNames = [selectedPals[0].getElementsByClassName('palName')[0].textContent, selectedPals[1].getElementsByClassName('palName')[0].textContent];
