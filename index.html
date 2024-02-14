@@ -106,6 +106,7 @@
 
                                     const palEntry = document.createElement('div');
                                     palEntry.classList.add('palEntry');
+                                    palEntry.id = `entry-${pal.name}`;
 
                                     const palImg = document.createElement('img');
                                     palImg.src = `./resource/img/pal/${pal.name}.png`;
@@ -408,6 +409,7 @@
                 let field = document.getElementsByClassName('resultField')[0];
                 let selectedPals = [];
                 selectedPals = Array.from(document.getElementsByClassName('palEntry selected'));
+                let childName = '';
 
                 // Two pals have NOT yet been selected
                 if (selectedPals.length < 2) field.textContent = '';
@@ -416,7 +418,7 @@
                     let palNames = [selectedPals[0].getElementsByClassName('palName')[0].textContent, selectedPals[1].getElementsByClassName('palName')[0].textContent];
                     let unique;
                     unique = getUniqueCombo(palNames[0], palNames[1]);
-                    if (unique) field.textContent = unique;
+                    if (unique) childName = unique;
                     else {
                         let breedPowers = selectedPals.map((palEntry) => palEntry.getAttribute('data-breedPower'));
                         let resultBreedPower = Math.floor((parseInt(breedPowers[0]) + parseInt(breedPowers[1]) + 1) / 2);
@@ -426,9 +428,19 @@
                         let nearest = allBreedPowers.reduce(function (prev, curr) {
                             return (Math.abs(curr - resultBreedPower) < Math.abs(prev - resultBreedPower) ? curr : prev);
                         });
-
-                        field.textContent = palArray[allBreedPowers.indexOf(nearest)].name;
+                        childName = palArray[allBreedPowers.indexOf(nearest)].name;
                     }
+                    field.textContent = '';
+                    console.log(childName);
+
+                    let childEntry = document.getElementById(`entry-${childName}`).cloneNode(true);
+                    if (!childEntry.classList.contains('selected')) childEntry.classList.toggle('result');
+                    else {
+                        childEntry.classList.toggle('result');
+                        childEntry.classList.toggle('selected');
+                    }
+                    childEntry.style.display = 'block';
+                    field.appendChild(childEntry);
                 }
             }
         </script>
