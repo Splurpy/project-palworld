@@ -61,11 +61,11 @@ body::-webkit-scrollbar-thumb {
     border-radius: 8px;
     font-family: 'Trebuchet MS';
     font-weight: 900;
-    color: white;
+    color: rgb(255, 255, 255);
 }
 
 #searchBox::placeholder {
-    color: white;
+    color: rgba(255, 255, 255, 0.637);
 }
 
 .container {
@@ -138,9 +138,13 @@ body::-webkit-scrollbar-thumb {
     border-radius: 10px;
 }
 
-.palEntry.selected,
 .palEntry:hover {
     box-shadow: 0px 0px 15px rgb(255, 255, 255);
+    transition: box-shadow 0.3s ease;
+}
+
+.palEntry.selected {
+    box-shadow: 0px 0px 15px rgb(255, 118, 77);
     transition: box-shadow 0.3s ease;
 }
 
@@ -468,6 +472,12 @@ body::-webkit-scrollbar-thumb {
     opacity: 60%;
     height: 26px;
     transition: 0.3s ease-in-out;
+}
+
+.workFilterButton:hover,
+.elementFilterButton:hover {
+    opacity: 80%;
+    transition: 0.1s ease-in-out;
 }
 
 .workFilterButton {
