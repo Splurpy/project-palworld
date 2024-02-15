@@ -390,6 +390,12 @@
             }
         </script>
         <script>
+            function removeFadeOut(element) {
+                element.classList.add('removed');
+                setTimeout(function () {
+                    element.parentNode.removeChild(element);
+                }, 80);
+            }
 
             // Array of combos (Length 3 array of parent1, parent2, and child)
             // Pass in parent1 and parent2 as palNames (strings), return null if not unique combo
@@ -412,7 +418,12 @@
                 let childName = '';
 
                 // Two pals have NOT yet been selected
-                if (selectedPals.length < 2) field.textContent = '';
+                console.log('Children: ', field.children[0]);
+                if (selectedPals.length < 2) {
+                    if (field.childElementCount > 0) {
+                        removeFadeOut(field.children[0]);
+                    }
+                }
                 // Two pals have been selected
                 else {
                     let palNames = [selectedPals[0].getElementsByClassName('palName')[0].textContent, selectedPals[1].getElementsByClassName('palName')[0].textContent];
@@ -430,15 +441,16 @@
                         });
                         childName = palArray[allBreedPowers.indexOf(nearest)].name;
                     }
-                    field.textContent = '';
+                    if (field.childElementCount > 0) {
+                        removeFadeOut(field.children[0]);
+                    }
                     console.log(childName);
 
                     let childEntry = document.getElementById(`entry-${childName}`).cloneNode(true);
-                    if (!childEntry.classList.contains('selected')) childEntry.classList.toggle('result');
-                    else {
-                        childEntry.classList.toggle('result');
+                    if (childEntry.classList.contains('selected')) {
                         childEntry.classList.toggle('selected');
                     }
+                    childEntry.classList.toggle('result');
                     childEntry.style.display = 'block';
                     field.appendChild(childEntry);
                 }

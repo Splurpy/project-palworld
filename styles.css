@@ -121,6 +121,7 @@ body::-webkit-scrollbar-thumb {
     background: rgba(255, 255, 255, 0.3);
 }
 
+.shineBox.result:before,
 .shineBox.selected:before,
 .shineBox:hover:before {
     left: 0px;
@@ -138,12 +139,45 @@ body::-webkit-scrollbar-thumb {
     border-radius: 10px;
 }
 
+.palEntry.result {
+    animation: fadein 300ms 0ms ease-in-out forwards;
+    position: absolute;
+}
+
+.palEntry.result.removed {
+    opacity: 100%;
+    animation: fadeout 200ms 0ms ease-in-out forwards;
+}
+
+@keyframes fadein {
+    0% {
+        opacity: 0%;
+    }
+100% {
+    opacity: 100%;
+    }
+}
+
+@keyframes fadeout {
+    0% {
+        opacity: 100%;
+    }
+50% {
+    opacity: 0%;
+    }
+}
+
 .palEntry:hover {
     box-shadow: 0px 0px 15px rgb(255, 255, 255);
     transition: box-shadow 0.3s ease;
 }
 
 .palEntry.selected {
+    box-shadow: 0px 0px 15px rgb(255, 118, 77);
+    transition: box-shadow 0.3s ease;
+}
+
+.palEntry.result {
     box-shadow: 0px 0px 15px rgb(255, 118, 77);
     transition: box-shadow 0.3s ease;
 }
@@ -172,6 +206,7 @@ body::-webkit-scrollbar-thumb {
     height: 100px;
 }
 
+.palEntry.result .palImg,
 .palEntry.selected .palImg,
 .palEntry:hover .palImg {
     filter: drop-shadow(0px 00px 6px black);
@@ -190,6 +225,7 @@ body::-webkit-scrollbar-thumb {
     height: 29px;
 }
 
+.palEntry.result .element,
 .palEntry.selected .element,
 .palEntry:hover .element {
     filter: drop-shadow(0px 00px 6px black);
@@ -216,11 +252,21 @@ body::-webkit-scrollbar-thumb {
     transition: left 0.3s ease-in-out, top 0.3s ease-in-out;
 }
 
-.palEntry.selected .workImg:not(:first-child),
-.palEntry:hover .workImg:not(:first-child) {
+.palEntry:hover .workImg {
     left: calc(116px + (7px * var(--index)));
+    height: 20px;
+    transition: left 0.1s ease-in-out, top 0.3s ease-in-out;
 }
 
+.palEntry.result:hover .workImg,
+.palEntry.result .workImg {
+    position: absolute;
+    left: calc(116px + (27px * var(--index)));
+    height: 20px;
+    transition: left 0.3s ease-in-out, top 0.3s ease-in-out;
+}
+
+.palEntry.result .workImg,
 .palEntry.selected .workImg,
 .palEntry:hover .workImg {
     filter: drop-shadow(0px 00px 3px black);
@@ -247,6 +293,14 @@ body::-webkit-scrollbar-thumb {
 
 .palEntry.selected .workPlate,
 .palEntry:hover .workPlate {
+    filter: drop-shadow(0px 00px 6px black);
+    z-index: 5;
+    top: 65px;
+    opacity: 100%;
+    background-color: #0e2741;
+}
+
+.palEntry.result .workPlate {
     filter: drop-shadow(0px 00px 6px black);
     z-index: 5;
     top: 65px;
@@ -316,6 +370,7 @@ body::-webkit-scrollbar-thumb {
     color: #D69C6B;
 }
 
+.palEntry.result .workLvl,
 .palEntry.selected .workLvl,
 .palEntry:hover .workLvl {
     z-index: 4;
@@ -521,13 +576,15 @@ body::-webkit-scrollbar-thumb {
 
 .resultField {
     order: 3;
+    overflow: hidden;
     width: 306.8px;
     height: 104.8px;
     margin-top: auto;
     margin-right: 10px;
     margin-bottom: auto;
     margin-left: 10px;
-    background-color: #40649e;
+    padding: 10px;
+    background-color: #2e4d7f70;
     border-radius: 10px;
     color: white;
     text-align: center;
