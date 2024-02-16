@@ -140,12 +140,12 @@ body::-webkit-scrollbar-thumb {
 }
 
 .palEntry.result {
-    animation: fadein 300ms 0ms ease-in-out forwards;
     position: absolute;
+    animation: fadein 300ms 0ms ease-in-out forwards;
 }
 
 .palEntry.result.removed {
-    opacity: 100%;
+    opacity: 0%;
     animation: fadeout 200ms 0ms ease-in-out forwards;
 }
 
@@ -162,8 +162,8 @@ body::-webkit-scrollbar-thumb {
     0% {
         opacity: 100%;
     }
-50% {
-    opacity: 0%;
+100% {
+        opacity: 0%;
     }
 }
 
@@ -252,6 +252,7 @@ body::-webkit-scrollbar-thumb {
     transition: left 0.3s ease-in-out, top 0.3s ease-in-out;
 }
 
+.palEntry.selected .workImg,
 .palEntry:hover .workImg {
     left: calc(116px + (7px * var(--index)));
     height: 20px;
