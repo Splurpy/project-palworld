@@ -1,3 +1,33 @@
+header {
+    display: block;
+    width: 100%;
+    margin: 20px;
+    font-size: 30px;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    font-weight: 700;
+    color: white;
+    text-align: center;
+    text-shadow: 1px 2px 2px rgb(71, 157, 255), 0 0 1em rgb(255, 255, 254), 0 0 0.2em rgb(0, 96, 174);
+}
+
+.modeLabel {
+    color: inherit;
+    text-shadow: 1px 1px 3px rgb(0, 0, 0), 0 0 1em rgb(118, 118, 118), 0 0 0.2em rgb(83, 85, 86);
+    font-size: 50%;
+}
+
+.modeDropdown {
+    background-color: inherit;
+    color: inherit;
+    border-radius: 10px;
+    font-family: inherit;
+    font-weight: 400;
+}
+
+.dropdownOption {
+    background-color: #011f3d;
+}
+
 body {
     display: flex;
     flex-wrap: wrap;
@@ -26,8 +56,15 @@ body::-webkit-scrollbar-thumb {
     width: fit-content;
     max-width: fit-content;
     height: fit-content;
-    max-height: 448.67px;
+    max-height: 510px;
     margin: 10px;
+}
+
+.label {
+    margin: 5px;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    font-weight: 700;
+    color: white;
 }
 
 .searchPanel {
@@ -137,11 +174,14 @@ body::-webkit-scrollbar-thumb {
     border-style: solid;
     border-color: rgb(63, 146, 255);
     border-radius: 10px;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    font-weight: 600;
 }
 
 .palEntry.result {
     position: absolute;
     animation: fadein 300ms 0ms ease-in-out forwards;
+    transform: translateY(10px);
 }
 
 .palEntry.result.removed {
@@ -163,7 +203,7 @@ body::-webkit-scrollbar-thumb {
         opacity: 100%;
     }
 100% {
-        opacity: 0%;
+    opacity: 0%;
     }
 }
 
@@ -188,9 +228,7 @@ body::-webkit-scrollbar-thumb {
     bottom: 1px;
     left: 5px;
     font-size: 12px;
-    font-family: 'Trebuchet MS';
     font-style: bold;
-    font-weight: 550;
     color: rgb(250, 250, 250);
     text-shadow: 1px 1px 2px rgb(0, 0, 0), 0 0 1em rgb(0, 0, 0), 0 0 0.2em rgb(0, 0, 0);
 }
@@ -318,9 +356,10 @@ body::-webkit-scrollbar-thumb {
     left: calc(6px + (27px * var(--index)));
     opacity: 0%;
     font-size: 13.5px;
-    font-family: monospace;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
     font-style: italic;
     text-shadow: 1px 1px 2px rgb(0, 0, 0), 0 0 1em rgb(0, 0, 0), 0 0 0.2em rgb(0, 0, 0);
+    font-weight: 200;
 }
 
 .workLvl.kindling {
@@ -375,7 +414,7 @@ body::-webkit-scrollbar-thumb {
 .palEntry.selected .workLvl,
 .palEntry:hover .workLvl {
     z-index: 4;
-    top: 4px;
+    top: 3px;
     opacity: 70%;
     transition: 0.7s ease-in-out;
 }
@@ -579,11 +618,16 @@ body::-webkit-scrollbar-thumb {
     order: 3;
     overflow: hidden;
     width: 306.8px;
-    height: 104.8px;
+    height: 134.8px;
     margin-top: auto;
     margin-right: 10px;
     margin-bottom: auto;
     margin-left: 10px;
+    text-align: center;
+    text-transform: capitalize;
+    text-shadow: 1px 1px 2px rgb(42, 42, 43), 0 0 1em rgb(0, 0, 0), 0 0 0.2em rgb(0, 96, 174);
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    font-weight: 700;
     padding: 10px;
     background-color: #2e4d7f70;
     border-radius: 10px;

@@ -6,10 +6,29 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Pal Entries</title>
         <link rel="stylesheet" href="./styles.css">
+
+        <script> // Mode defs
+            const parentMode = 'parent'; // calculate the other parent when given the child and one parent
+            const childMode = 'child'; // calculate the child of two chosen parents
+            var mode = childMode;
+        </script>
     </head>
 
+    <header>
+        PALWORLD BREEDING CALCULATOR
+        <br><br><br>
+        <label class="modeLabel" for="mode">Mode:</label>
+        <select class="modeDropdown" name="mode" id="mode" onchange="updateModeLabels();">
+            <option value="child" class="dropdownOption">Child-Oriented</option>
+            <option value="parent" class="dropdownOption">Parent-Oriented</option>
+        </select>
+    </header>
+
     <body>
-        <div class="searchWrapper">
+        <div class=" searchWrapper" id="search-1">
+            <div class="label">
+                Parent 1
+            </div>
             <div class="searchPanel">
                 <div class="topPortion">
                     <input type="text" class="searchBox" id="searchBox" placeholder="Search by name..."
@@ -176,6 +195,8 @@
                                 });
                                 let searchWrapper1 = document.querySelector('.searchWrapper');
                                 let searchWrapper2 = searchWrapper1.cloneNode(true);
+                                searchWrapper2.id = 'search-2';
+                                searchWrapper2.getElementsByClassName('label')[0].textContent = 'Parent 2';
                                 document.body.appendChild(searchWrapper2);
                                 addFilters();
                                 addSelectHandlers([searchWrapper1, searchWrapper2]);
@@ -211,7 +232,7 @@
                 </div>
             </div>
         </div>
-        <div class="resultField"></div>
+        <div class="resultField">Child</div>
         <script>
             function addFilters() {
                 const work_suitabilities = ['kindling', 'watering', 'planting', 'genElec', 'handiwork', 'gathering', 'lumbering', 'mining', 'medicine', 'cooling', 'transporting', 'farming'];
@@ -415,10 +436,10 @@
                 let field = document.getElementsByClassName('resultField')[0];
                 let selectedPals = [];
                 selectedPals = Array.from(document.getElementsByClassName('palEntry selected'));
-                let childName = '';
+                let resultName = '';
 
                 // Two pals have NOT yet been selected
-                console.log('Children: ', field.children[0]);
+                // console.log('Children: ', field.children[0]);
                 if (selectedPals.length < 2) {
                     if (field.childElementCount > 0) {
                         removeFadeOut(field.children[0]);
@@ -428,31 +449,54 @@
                 else {
                     let palNames = [selectedPals[0].getElementsByClassName('palName')[0].textContent, selectedPals[1].getElementsByClassName('palName')[0].textContent];
                     let unique;
-                    unique = getUniqueCombo(palNames[0], palNames[1]);
-                    if (unique) childName = unique;
-                    else {
-                        let breedPowers = selectedPals.map((palEntry) => palEntry.getAttribute('data-breedPower'));
-                        let resultBreedPower = Math.floor((parseInt(breedPowers[0]) + parseInt(breedPowers[1]) + 1) / 2);
 
-                        let allBreedPowers = palArray.map((pal) => pal.breedPower);
+                    if (mode === childMode) {
+                        unique = getUniqueCombo(palNames[0], palNames[1]);
+                        if (unique) resultName = unique;
+                        else {
+                            let breedPowers = selectedPals.map((palEntry) => palEntry.getAttribute('data-breedPower'));
+                            let resultBreedPower = Math.floor((parseInt(breedPowers[0]) + parseInt(breedPowers[1]) + 1) / 2);
 
-                        let nearest = allBreedPowers.reduce(function (prev, curr) {
-                            return (Math.abs(curr - resultBreedPower) < Math.abs(prev - resultBreedPower) ? curr : prev);
-                        });
-                        childName = palArray[allBreedPowers.indexOf(nearest)].name;
+                            let allBreedPowers = palArray.map((pal) => pal.breedPower);
+
+                            let nearest = allBreedPowers.reduce(function (prev, curr) {
+                                return (Math.abs(curr - resultBreedPower) < Math.abs(prev - resultBreedPower) ? curr : prev);
+                            });
+                            resultName = palArray[allBreedPowers.indexOf(nearest)].name;
+                        }
                     }
+
                     if (field.childElementCount > 0) {
                         removeFadeOut(field.children[0]);
                     }
-                    console.log(childName);
+                    console.log(resultName);
 
-                    let childEntry = document.getElementById(`entry-${childName}`).cloneNode(true);
-                    if (childEntry.classList.contains('selected')) {
-                        childEntry.classList.toggle('selected');
+                    let resultEntry = document.getElementById(`entry-${resultName}`).cloneNode(true);
+                    if (resultEntry.classList.contains('selected')) {
+                        resultEntry.classList.toggle('selected');
                     }
-                    childEntry.classList.toggle('result');
-                    childEntry.style.display = 'block';
-                    field.appendChild(childEntry);
+                    resultEntry.classList.toggle('result');
+                    resultEntry.style.display = 'block';
+                    field.appendChild(resultEntry);
+                }
+            }
+        </script>
+        <script>
+            function updateModeLabels() {
+                let label1 = document.getElementById('search-1').getElementsByClassName('label')[0];
+                let label2 = document.getElementById('search-2').getElementsByClassName('label')[0];
+                let resultLabel = document.getElementsByClassName('resultField')[0];
+
+                mode = document.getElementsByName('mode')[0].value;
+
+                if (mode === childMode) {
+                    label1.textContent = 'Parent 1';
+                    label2.textContent = 'Parent 2';
+                    resultLabel.textContent = 'Child';
+                } else {
+                    label1.textContent = 'Child';
+                    label2.textContent = 'Parent 1';
+                    resultLabel.textContent = 'Parent 2';
                 }
             }
         </script>
