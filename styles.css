@@ -65,11 +65,11 @@ body::-webkit-scrollbar-thumb {
     gap: 20px;
     position: relative;
     z-index: 1;
-    bottom: 150px;
+    bottom: 200px;
     overflow-x: scroll;
     overflow-y: hidden;
     width: fit-content;
-    height: 750px;
+    height: 900px;
 }
 
 .appContainer::-webkit-scrollbar {
