@@ -16,7 +16,7 @@
 
     <header>
         PALWORLD BREEDING CALCULATOR
-        <br><br><br>
+        <br>
         <label class="modeLabel" for="mode">Mode:</label>
         <select class="modeDropdown" name="mode" id="mode" onchange="updateModeLabels();">
             <option value="child" class="dropdownOption">Child-Oriented</option>
@@ -25,214 +25,223 @@
     </header>
 
     <body>
-        <div class=" searchWrapper" id="search-1">
-            <div class="label">
-                Parent 1
-            </div>
-            <div class="searchPanel">
-                <div class="topPortion">
-                    <input type="text" class="searchBox" id="searchBox" placeholder="Search by name..."
-                        oninput="filterResults(this.parentElement.parentElement);">
+        <div class="appContainer">
+            <div class=" searchWrapper" id="search-1">
+                <div class="label">
+                    Parent 1
                 </div>
-                <div id="palContainer" class="container palContainer"></div>
-                <script src="./dist/sql-wasm.js"></script>
-                <script> // Configuration for SQL.js
-                    var palArray = new Array();
-                    var uniqueCombos = new Array();
-                    const config = {
-                        locateFile: filename => `/dist/${filename}`
-                    };
+                <div class="searchPanel">
+                    <div class="topPortion">
+                        <input type="text" class="searchBox" id="searchBox" placeholder="Search by name..."
+                            oninput="filterResults(this.parentElement.parentElement);">
+                    </div>
+                    <div id="palContainer" class="container palContainer"></div>
+                    <script src="./dist/sql-wasm.js"></script>
+                    <script> // Configuration for SQL.js
+                        var palArray = new Array();
+                        var uniqueCombos = new Array();
+                        const config = {
+                            locateFile: filename => `/dist/${filename}`
+                        };
 
-                    initSqlJs(config).then(function (SQL) {
-                        // Pal class definition
-                        class Pal {
-                            constructor(tieOrder, dexNum, name, rarity, elem1, elem2, sprintSpeed, breedPower,
-                                kindling, watering, planting, genElec, handiwork, gathering, lumbering, mining, medicine, cooling, transporting, farming) {
-                                this.tieOrder = tieOrder;
-                                this.dexNum = dexNum;
-                                this.name = name;
-                                this.rarity = rarity;
-                                this.elem1 = elem1;
-                                this.elem2 = elem2;
-                                this.sprintSpeed = sprintSpeed;
-                                this.breedPower = breedPower;
+                        initSqlJs(config).then(function (SQL) {
+                            // Pal class definition
+                            class Pal {
+                                constructor(tieOrder, dexNum, name, rarity, elem1, elem2, sprintSpeed, breedPower,
+                                    kindling, watering, planting, genElec, handiwork, gathering, lumbering, mining, medicine, cooling, transporting, farming) {
+                                    this.tieOrder = tieOrder;
+                                    this.dexNum = dexNum;
+                                    this.name = name;
+                                    this.rarity = rarity;
+                                    this.elem1 = elem1;
+                                    this.elem2 = elem2;
+                                    this.sprintSpeed = sprintSpeed;
+                                    this.breedPower = breedPower;
 
-                                this.kindling = kindling;
-                                this.planting = planting;
-                                this.handiwork = handiwork;
-                                this.lumbering = lumbering;
-                                this.medicine = medicine;
-                                this.transporting = transporting;
-                                this.watering = watering;
-                                this.genElec = genElec;
-                                this.gathering = gathering;
-                                this.mining = mining;
-                                this.cooling = cooling;
-                                this.farming = farming;
-                            }
+                                    this.kindling = kindling;
+                                    this.planting = planting;
+                                    this.handiwork = handiwork;
+                                    this.lumbering = lumbering;
+                                    this.medicine = medicine;
+                                    this.transporting = transporting;
+                                    this.watering = watering;
+                                    this.genElec = genElec;
+                                    this.gathering = gathering;
+                                    this.mining = mining;
+                                    this.cooling = cooling;
+                                    this.farming = farming;
+                                }
 
-                            // Reading query as pal objects
-                            static async readPals() {
-                                try {
+                                // Reading query as pal objects
+                                static async readPals() {
+                                    try {
+                                        const response = await fetch('../db/paldb.db');
+                                        const buffer = await response.arrayBuffer();
+                                        const db = new SQL.Database(new Uint8Array(buffer));
+                                        const query = "SELECT pd.IndexOrder, bp.DexNum, bp.Name, pd.Rarity, pd.ElementType1, pd.ElementType2, pd.RideSprintSpeed, bp.Power, pd.WorkSuitability_EmitFlame, pd.WorkSuitability_Watering, pd.WorkSuitability_Seeding, pd.WorkSuitability_GenerateElectricity, pd.WorkSuitability_Handcraft, pd.WorkSuitability_Collection, pd.WorkSuitability_Deforest, pd.WorkSuitability_Mining, pd.WorkSuitability_ProductMedicine, pd.WorkSuitability_Cool,  pd.WorkSuitability_Transport,  pd.WorkSuitability_MonsterFarm FROM breeding_power bp JOIN pal_data pd ON bp.Name = pd.Name ORDER BY pd.IndexOrder ASC";
+                                        const rows = db.exec(query);
+
+                                        if (rows.length > 0) {
+
+                                            rows[0].values.forEach(row => {
+                                                const [tieOrder, dexNum, name, rarity, elem1, elem2, sprintSpeed, breedPower, kindling, watering, planting, genElec, handiwork, gathering, lumbering, mining, medicine, cooling, transporting, farming] = row;
+                                                const fElem1 = elem1.replace("EPalElementType::", "").toLowerCase();
+                                                const fElem2 = elem2.replace("EPalElementType::", "").toLowerCase();
+                                                palArray[tieOrder - 1] = new Pal(tieOrder, dexNum, name, rarity, fElem1, fElem2, sprintSpeed, breedPower, kindling, watering, planting, genElec, handiwork, gathering, lumbering, mining, medicine, cooling, transporting, farming);
+                                            });
+
+                                            console.log(`[DEBUG] Successfully read ${palArray.length} entries`);
+                                        } else {
+                                            console.log("[DEBUG] ERROR: No data retrieved");
+                                            throw new Error("No data retrieved");
+                                        }
+                                    } catch (error) {
+                                        console.error(error);
+                                        throw error;
+                                    }
+
                                     const response = await fetch('../db/paldb.db');
                                     const buffer = await response.arrayBuffer();
                                     const db = new SQL.Database(new Uint8Array(buffer));
-                                    const query = "SELECT pd.IndexOrder, bp.DexNum, bp.Name, pd.Rarity, pd.ElementType1, pd.ElementType2, pd.RideSprintSpeed, bp.Power, pd.WorkSuitability_EmitFlame, pd.WorkSuitability_Watering, pd.WorkSuitability_Seeding, pd.WorkSuitability_GenerateElectricity, pd.WorkSuitability_Handcraft, pd.WorkSuitability_Collection, pd.WorkSuitability_Deforest, pd.WorkSuitability_Mining, pd.WorkSuitability_ProductMedicine, pd.WorkSuitability_Cool,  pd.WorkSuitability_Transport,  pd.WorkSuitability_MonsterFarm FROM breeding_power bp JOIN pal_data pd ON bp.Name = pd.Name ORDER BY pd.IndexOrder ASC";
+                                    const query = "SELECT * FROM unique_combos";
                                     const rows = db.exec(query);
 
                                     if (rows.length > 0) {
-
                                         rows[0].values.forEach(row => {
-                                            const [tieOrder, dexNum, name, rarity, elem1, elem2, sprintSpeed, breedPower, kindling, watering, planting, genElec, handiwork, gathering, lumbering, mining, medicine, cooling, transporting, farming] = row;
-                                            const fElem1 = elem1.replace("EPalElementType::", "").toLowerCase();
-                                            const fElem2 = elem2.replace("EPalElementType::", "").toLowerCase();
-                                            palArray[tieOrder - 1] = new Pal(tieOrder, dexNum, name, rarity, fElem1, fElem2, sprintSpeed, breedPower, kindling, watering, planting, genElec, handiwork, gathering, lumbering, mining, medicine, cooling, transporting, farming);
+                                            const [parent1, parent2, child] = row;
+                                            uniqueCombos.push([parent1, parent2, child]);
                                         });
-
-                                        console.log(`[DEBUG] Successfully read ${palArray.length} entries`);
-                                    } else {
-                                        console.log("[DEBUG] ERROR: No data retrieved");
-                                        throw new Error("No data retrieved");
                                     }
+                                }
+                            }
+
+                            (async function () {
+                                try {
+                                    await Pal.readPals();
+                                    const palContainer = document.getElementById('palContainer');
+                                    let selectedPalEntry1 = null;
+                                    let selectedPalEntry2 = null;
+
+                                    palArray.forEach(pal => {
+
+                                        const palEntry = document.createElement('div');
+                                        palEntry.classList.add('palEntry');
+                                        palEntry.id = `entry-${pal.name}`;
+
+                                        const palImg = document.createElement('img');
+                                        palImg.src = `./resource/img/pal/${pal.name}.png`;
+                                        palImg.classList.add('palImg');
+
+                                        const palName = document.createElement('div');
+                                        palName.classList.add('palName');
+                                        palName.textContent = pal.name;
+
+                                        const shineBox = document.createElement('div');
+                                        palEntry.classList.add('shineBox');
+
+                                        const element = document.createElement('img');
+                                        element.id = `${pal.name}.elem1`;
+                                        element.src = `./resource/img/elem/${pal.elem1}.png`;
+                                        element.classList.add('element', `${pal.elem1}`);
+
+                                        if (pal.elem2 !== 'none') {
+                                            const element2 = document.createElement('img');
+                                            element2.id = `${pal.name}.elem2`;
+                                            element2.src = `./resource/img/elem/${pal.elem2}.png`;
+                                            element2.classList.add('element', 'secondary', `${pal.elem2}`);
+                                            palEntry.appendChild(element2);
+                                        }
+
+                                        // Breeding power
+                                        palEntry.setAttribute('data-breedPower', pal.breedPower);
+
+                                        // new div for work plate
+                                        const workPlate = document.createElement('div');
+                                        workPlate.classList.add('workPlate');
+
+                                        // Work Suitabilities
+                                        const workImg = document.createElement('img');
+                                        workImg.classList.add('workImg');
+
+                                        const work_suitabilities = ['kindling', 'watering', 'planting', 'genElec', 'handiwork', 'gathering', 'lumbering', 'mining', 'medicine', 'cooling', 'transporting', 'farming'];
+
+                                        let workImgIndex = 0;
+                                        for (let i = 0; i < work_suitabilities.length; i++) {
+                                            const suitabilityImg = document.createElement('img');
+                                            suitabilityImg.src = `./resource/img/work/${work_suitabilities[i]}.png`;
+                                            suitabilityImg.classList.add('workImg', work_suitabilities[i]);
+                                            if (pal[work_suitabilities[i]] == 0) {
+                                                suitabilityImg.style.filter = 'grayscale(100%)';
+                                            }
+                                            if (pal[work_suitabilities[i]] !== 0) {
+                                                suitabilityImg.style.setProperty('--index', workImgIndex++);
+
+                                                const workLvl = document.createElement('p');
+                                                workLvl.innerText = pal[work_suitabilities[i]];
+
+                                                workLvl.classList.add('workLvl', work_suitabilities[i]);
+                                                workLvl.style.setProperty('--index', workImgIndex - 1);
+                                                workPlate.appendChild(workLvl);
+                                                palEntry.appendChild(suitabilityImg);
+                                            }
+
+                                        }
+
+                                        palEntry.appendChild(palImg);
+                                        palEntry.appendChild(element);
+                                        palEntry.appendChild(palName);
+                                        palEntry.appendChild(shineBox);
+                                        palEntry.appendChild(workPlate);
+                                        palContainer.appendChild(palEntry);
+                                    });
+                                    let searchWrapper1 = document.querySelector('.searchWrapper');
+                                    let searchWrapper2 = searchWrapper1.cloneNode(true);
+                                    searchWrapper2.id = 'search-2';
+                                    searchWrapper2.getElementsByClassName('label')[0].textContent = 'Parent 2';
+                                    document.getElementsByClassName('appContainer')[0].appendChild(searchWrapper2);
+                                    addFilters();
+                                    addSelectHandlers([searchWrapper1, searchWrapper2]);
                                 } catch (error) {
                                     console.error(error);
-                                    throw error;
                                 }
+                            })();
+                        });
+                    </script>
+                </div>
+                <div class="filtersMenuHitbox">
+                    <div class="filtersMenu">
+                        <div class="filtersMenuTab">
+                            <p class="tabArrow">
+                                &#9660;
+                            </p>
+                        </div>
+                        <div class="hideyMan"></div>
+                        <div class="filterImage">
+                            <div class="filterTriangle">
+                                &#x25BC;
 
-                                const response = await fetch('../db/paldb.db');
-                                const buffer = await response.arrayBuffer();
-                                const db = new SQL.Database(new Uint8Array(buffer));
-                                const query = "SELECT * FROM unique_combos";
-                                const rows = db.exec(query);
+                                <div class="filterBar">
+                                    &#x2758;
 
-                                if (rows.length > 0) {
-                                    rows[0].values.forEach(row => {
-                                        const [parent1, parent2, child] = row;
-                                        uniqueCombos.push([parent1, parent2, child]);
-                                    });
-                                }
-                            }
-                        }
-
-                        (async function () {
-                            try {
-                                await Pal.readPals();
-                                const palContainer = document.getElementById('palContainer');
-                                let selectedPalEntry1 = null;
-                                let selectedPalEntry2 = null;
-
-                                palArray.forEach(pal => {
-
-                                    const palEntry = document.createElement('div');
-                                    palEntry.classList.add('palEntry');
-                                    palEntry.id = `entry-${pal.name}`;
-
-                                    const palImg = document.createElement('img');
-                                    palImg.src = `./resource/img/pal/${pal.name}.png`;
-                                    palImg.classList.add('palImg');
-
-                                    const palName = document.createElement('div');
-                                    palName.classList.add('palName');
-                                    palName.textContent = pal.name;
-
-                                    const shineBox = document.createElement('div');
-                                    palEntry.classList.add('shineBox');
-
-                                    const element = document.createElement('img');
-                                    element.id = `${pal.name}.elem1`;
-                                    element.src = `./resource/img/elem/${pal.elem1}.png`;
-                                    element.classList.add('element', `${pal.elem1}`);
-
-                                    if (pal.elem2 !== 'none') {
-                                        const element2 = document.createElement('img');
-                                        element2.id = `${pal.name}.elem2`;
-                                        element2.src = `./resource/img/elem/${pal.elem2}.png`;
-                                        element2.classList.add('element', 'secondary', `${pal.elem2}`);
-                                        palEntry.appendChild(element2);
-                                    }
-
-                                    // Breeding power
-                                    palEntry.setAttribute('data-breedPower', pal.breedPower);
-
-                                    // new div for work plate
-                                    const workPlate = document.createElement('div');
-                                    workPlate.classList.add('workPlate');
-
-                                    // Work Suitabilities
-                                    const workImg = document.createElement('img');
-                                    workImg.classList.add('workImg');
-
-                                    const work_suitabilities = ['kindling', 'watering', 'planting', 'genElec', 'handiwork', 'gathering', 'lumbering', 'mining', 'medicine', 'cooling', 'transporting', 'farming'];
-
-                                    let workImgIndex = 0;
-                                    for (let i = 0; i < work_suitabilities.length; i++) {
-                                        const suitabilityImg = document.createElement('img');
-                                        suitabilityImg.src = `./resource/img/work/${work_suitabilities[i]}.png`;
-                                        suitabilityImg.classList.add('workImg', work_suitabilities[i]);
-                                        if (pal[work_suitabilities[i]] == 0) {
-                                            suitabilityImg.style.filter = 'grayscale(100%)';
-                                        }
-                                        if (pal[work_suitabilities[i]] !== 0) {
-                                            suitabilityImg.style.setProperty('--index', workImgIndex++);
-
-                                            const workLvl = document.createElement('p');
-                                            workLvl.innerText = pal[work_suitabilities[i]];
-
-                                            workLvl.classList.add('workLvl', work_suitabilities[i]);
-                                            workLvl.style.setProperty('--index', workImgIndex - 1);
-                                            workPlate.appendChild(workLvl);
-                                            palEntry.appendChild(suitabilityImg);
-                                        }
-
-                                    }
-
-                                    palEntry.appendChild(palImg);
-                                    palEntry.appendChild(element);
-                                    palEntry.appendChild(palName);
-                                    palEntry.appendChild(shineBox);
-                                    palEntry.appendChild(workPlate);
-                                    palContainer.appendChild(palEntry);
-                                });
-                                let searchWrapper1 = document.querySelector('.searchWrapper');
-                                let searchWrapper2 = searchWrapper1.cloneNode(true);
-                                searchWrapper2.id = 'search-2';
-                                searchWrapper2.getElementsByClassName('label')[0].textContent = 'Parent 2';
-                                document.body.appendChild(searchWrapper2);
-                                addFilters();
-                                addSelectHandlers([searchWrapper1, searchWrapper2]);
-                            } catch (error) {
-                                console.error(error);
-                            }
-                        })();
-                    });
-                </script>
-            </div>
-            <div class="filtersMenuHitbox">
-                <div class="filtersMenu">
-                    <div class="filtersMenuTab">
-                        <p class="tabArrow">
-                            &#9660;
-                        </p>
-                    </div>
-                    <div class="hideyMan"></div>
-                    <div class="filterImage">
-                        <div class="filterTriangle">
-                            &#x25BC;
-
-                            <div class="filterBar">
-                                &#x2758;
-
+                                </div>
                             </div>
                         </div>
-                    </div>
-                    <div class="filtersContainer container">
-                        <div class="elementFilterContainer"></div>
-                        <div class="workFilterContainer"></div>
+                        <div class="filtersContainer container">
+                            <div class="elementFilterContainer"></div>
+                            <div class="workFilterContainer"></div>
+                        </div>
                     </div>
                 </div>
             </div>
+            <div class="resultField">
+                <div class="resultLabel">
+                    Child
+                </div>
+                <div class="resultContainer">
+
+                </div>
+            </div>
         </div>
-        <div class="resultField">Child</div>
         <script>
             function addFilters() {
                 const work_suitabilities = ['kindling', 'watering', 'planting', 'genElec', 'handiwork', 'gathering', 'lumbering', 'mining', 'medicine', 'cooling', 'transporting', 'farming'];
@@ -369,6 +378,19 @@
                         }
                     });
 
+                    // Filter panel2 when in parent mode
+                    if (mode === parentMode) {
+                        let childPanel = document.querySelector('#search-1');
+                        if (childPanel.getElementsByClassName('selected').length > 0) {
+                            let parent1Panel = document.querySelector('#search-2');
+                            let childName = childPanel.getElementsByClassName('selected')[0].getElementsByClassName('palName')[0].textContent;
+
+                            console.log('Child selected: ', childName);
+
+                            // TODO Only show elements within parent1Panel that are valid parents of the selected child
+                        }
+                    }
+
                     // Display entry if it contains adequate levels
                     if (conditions.includes(false)) shouldDisplay = false;
 
@@ -403,7 +425,8 @@
                             } else {
                                 selectedPalEntry2 = selectedPalEntry;
                             }
-                            console.log(`[DEBUG] 1: ${this.selectedPalEntry1} | 2: ${this.selectedPalEntry2}`);
+                            // console.log(`[DEBUG] 1: ${this.selectedPalEntry1} | 2: ${this.selectedPalEntry2}`);
+                            filterResults(wrapper);
                             calculateResult();
                         });
                     });
@@ -432,23 +455,47 @@
                 return result;
             }
 
+            // Array of combos (Length 3 array of parent1, parent2, and child)
+            // Pass in parent1, parent2, and child as palNames (strings), return null if not a unique combo
+            function getUniqueParent(parent1, child) {
+                let result = null;
+                uniqueCombos.forEach((combo) => {
+                    let parents = [combo[0], combo[1]];
+                    if (child === combo[2]) {
+                        if (parent1 === combo[0]) {
+                            result = combo[1];
+                        }
+                        else if (parent1 === combo[1]) {
+                            result = combo[0];
+                        }
+                    }
+                });
+
+                return result;
+            }
+
+
             function calculateResult() {
                 let field = document.getElementsByClassName('resultField')[0];
+                field = field.getElementsByClassName('resultContainer')[0];
                 let selectedPals = [];
                 selectedPals = Array.from(document.getElementsByClassName('palEntry selected'));
-                let resultName = '';
 
                 // Two pals have NOT yet been selected
                 // console.log('Children: ', field.children[0]);
                 if (selectedPals.length < 2) {
                     if (field.childElementCount > 0) {
-                        removeFadeOut(field.children[0]);
+                        Array.from(field.children).forEach((child) => {
+                            console.log(child);
+                            removeFadeOut(child);
+                        })
                     }
                 }
                 // Two pals have been selected
                 else {
                     let palNames = [selectedPals[0].getElementsByClassName('palName')[0].textContent, selectedPals[1].getElementsByClassName('palName')[0].textContent];
                     let unique;
+                    let resultName = '';
 
                     if (mode === childMode) {
                         unique = getUniqueCombo(palNames[0], palNames[1]);
@@ -464,20 +511,79 @@
                             });
                             resultName = palArray[allBreedPowers.indexOf(nearest)].name;
                         }
+
+                        if (field.childElementCount > 0) {
+                            removeFadeOut(field.children[0]);
+                        }
+                        // console.log(resultName);
+
+                        let resultEntry = document.getElementById(`entry-${resultName}`).cloneNode(true);
+                        if (resultEntry.classList.contains('selected')) {
+                            resultEntry.classList.toggle('selected');
+                        }
+                        resultEntry.classList.toggle('result');
+                        resultEntry.style.display = 'block';
+                        field.appendChild(resultEntry);
+
+                    }
+                    else { // Parent mode logic
+                        if (field.childElementCount > 0) {
+                            Array.from(field.children).forEach((child) => {
+                                field.removeChild(child);
+                            });
+                        }
+                        unique = getUniqueParent(palNames[1], palNames[0]);
+                        if (unique !== null) {
+                            let resultEntry = document.getElementById(`entry-${unique}`).cloneNode(true);
+                            if (resultEntry.classList.contains('selected')) {
+                                resultEntry.classList.toggle('selected');
+                            }
+                            resultEntry.classList.toggle('result');
+                            resultEntry.style.display = 'block';
+                            field.appendChild(resultEntry);
+                        }
+                        else {
+                            let breedPowers = selectedPals.map((palEntry) => palEntry.getAttribute('data-breedPower'));
+                            let childPower = parseInt(breedPowers[0]); // C is breedPowers[0]
+                            let parentPower = parseInt(breedPowers[1]); // p1 is breedPowers[1]
+
+                            // console.log('Parent breed power must be between ', lowerBound, 'and', upperBound);
+
+                            // p2 should lie between lowerBound and upperBound (inclusive lowerBound, exclusive upperBound)
+                            // It can be any integer in this range.
+
+                            let allBreedPowers = palArray.map((pal) => pal.breedPower);
+
+                            let filteredBreedPowers = [];
+                            let exactPower;
+                            allBreedPowers.forEach(power => {
+                                if (Math.floor((parentPower + power + 1) / 2) === childPower) exactPower = power;
+                            });
+                            // console.log(exactPower);
+                            // Filter the breedPowers to get the ones within the range of lowerBound and upperBound
+                            filteredBreedPowers = allBreedPowers.filter(breedPower => breedPower >= exactPower - 10 && breedPower <= exactPower + 10);
+                            // console.log('Valid corresponding powers: ', filteredBreedPowers);
+
+                            // Find the names corresponding to the filtered breedPowers
+                            let resultNames = [];
+                            filteredBreedPowers.forEach((filteredPower) => {
+                                // console.log('current power to get name for: ', filteredPower);
+                                resultNames.push(palArray[allBreedPowers.indexOf(filteredPower)].name);
+                            });
+                            // console.log(resultNames);
+
+                            resultNames.forEach(resultName => {
+                                let resultEntry = document.getElementById(`entry-${resultName}`).cloneNode(true);
+                                if (resultEntry.classList.contains('selected')) {
+                                    resultEntry.classList.toggle('selected');
+                                }
+                                resultEntry.classList.toggle('result');
+                                resultEntry.style.display = 'block';
+                                field.appendChild(resultEntry);
+                            })
+                        }
                     }
 
-                    if (field.childElementCount > 0) {
-                        removeFadeOut(field.children[0]);
-                    }
-                    console.log(resultName);
-
-                    let resultEntry = document.getElementById(`entry-${resultName}`).cloneNode(true);
-                    if (resultEntry.classList.contains('selected')) {
-                        resultEntry.classList.toggle('selected');
-                    }
-                    resultEntry.classList.toggle('result');
-                    resultEntry.style.display = 'block';
-                    field.appendChild(resultEntry);
                 }
             }
         </script>
@@ -485,7 +591,8 @@
             function updateModeLabels() {
                 let label1 = document.getElementById('search-1').getElementsByClassName('label')[0];
                 let label2 = document.getElementById('search-2').getElementsByClassName('label')[0];
-                let resultLabel = document.getElementsByClassName('resultField')[0];
+                let resultField = document.getElementsByClassName('resultField')[0];
+                let resultLabel = resultField.getElementsByClassName('resultLabel')[0];
 
                 mode = document.getElementsByName('mode')[0].value;
 
@@ -498,6 +605,7 @@
                     label2.textContent = 'Parent 1';
                     resultLabel.textContent = 'Parent 2';
                 }
+                resultField.classList.toggle('parentMode');
             }
         </script>
     </body>
