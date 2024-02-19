@@ -250,6 +250,10 @@ body::-webkit-scrollbar-thumb {
     }
 }
 
+.palEntry.invalidParent {
+    display: none;
+}
+
 .palEntry:hover {
     box-shadow: 0px 0px 15px rgb(255, 255, 255);
     transition: box-shadow 0.3s ease;

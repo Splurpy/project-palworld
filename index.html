@@ -237,9 +237,7 @@
                 <div class="resultLabel">
                     Child
                 </div>
-                <div class="resultContainer">
-
-                </div>
+                <div class="resultContainer"></div>
             </div>
         </div>
         <script>
@@ -365,7 +363,6 @@
                         let minLvl = inputBox.value;
                         if (!inputBox.value) minLvl = 0;
 
-                        // TODO SECOND HALF OF FILTERING LOGIC
                         let workEntry = workPlate.getElementsByClassName(`${inputBox.classList[1]}`);
                         workEntry = workEntry[0];
                         // If this palEntry has the following selected workType
@@ -379,15 +376,56 @@
                     });
 
                     // Filter panel2 when in parent mode
-                    if (mode === parentMode) {
+                    let wrapperId = currEntry.parentElement.parentElement.parentElement.id;
+                    if (mode === parentMode && wrapperId === 'search-1') {
                         let childPanel = document.querySelector('#search-1');
                         if (childPanel.getElementsByClassName('selected').length > 0) {
                             let parent1Panel = document.querySelector('#search-2');
-                            let childName = childPanel.getElementsByClassName('selected')[0].getElementsByClassName('palName')[0].textContent;
+                            let childEntry = childPanel.getElementsByClassName('selected')[0];
+                            let childName = childEntry.getElementsByClassName('palName')[0].textContent;
 
-                            console.log('Child selected: ', childName);
+                            // console.log('Child selected: ', childName);
 
-                            // TODO Only show elements within parent1Panel that are valid parents of the selected child
+                            // Only show elements within parent1Panel (#search-2) that are possible parents of the selected child
+
+                            // TODO not necessarily here, but unhide hidden entries
+
+                            let allBreedPowers = palArray.map((pal) => pal.breedPower);
+
+
+                            let childPower = parseInt(childEntry.getAttribute('data-breedPower'));
+                            let parentPower = parseInt(currEntry.getAttribute('data-breedPower'));
+
+                            // console.log('childPower: ', childPower);
+                            // console.log(`parentPower | ${palName.textContent} : `, parentPower);
+
+                            let filteredBreedPowers = [];
+                            let exactPower;
+                            allBreedPowers.forEach(power => {
+                                if (Math.floor((parentPower + power + 1) / 2) === childPower) exactPower = power;
+                            });
+
+                            // console.log('Exact power: ', exactPower);
+
+                            // Filter the breedPowers to get the ones within the range of lowerBound and upperBound
+                            filteredBreedPowers = allBreedPowers.filter(breedPower =>
+                                breedPower >= exactPower - 10 && breedPower <= exactPower + 10
+                            );
+
+                            let resultNames = [];
+                            filteredBreedPowers.forEach((filteredPower) => {
+                                resultNames.push(palArray[allBreedPowers.indexOf(filteredPower)].name);
+                            });
+
+                            let entryElement = parent1Panel.querySelector(`[data-breedPower='${parentPower}']`);
+
+                            if (resultNames.length > 0) {
+                                console.log('Showing parent: ', palName.textContent);
+                                if (entryElement.classList.contains('invalidParent')) entryElement.classList.toggle('invalidParent');
+                            } else {
+                                console.log('Hiding parent: ', palName.textContent);
+                                if (!entryElement.classList.contains('invalidParent')) entryElement.classList.toggle('invalidParent');
+                            }
                         }
                     }
 
@@ -547,11 +585,6 @@
                             let childPower = parseInt(breedPowers[0]); // C is breedPowers[0]
                             let parentPower = parseInt(breedPowers[1]); // p1 is breedPowers[1]
 
-                            // console.log('Parent breed power must be between ', lowerBound, 'and', upperBound);
-
-                            // p2 should lie between lowerBound and upperBound (inclusive lowerBound, exclusive upperBound)
-                            // It can be any integer in this range.
-
                             let allBreedPowers = palArray.map((pal) => pal.breedPower);
 
                             let filteredBreedPowers = [];
@@ -559,7 +592,7 @@
                             allBreedPowers.forEach(power => {
                                 if (Math.floor((parentPower + power + 1) / 2) === childPower) exactPower = power;
                             });
-                            // console.log(exactPower);
+
                             // Filter the breedPowers to get the ones within the range of lowerBound and upperBound
                             filteredBreedPowers = allBreedPowers.filter(breedPower => breedPower >= exactPower - 10 && breedPower <= exactPower + 10);
                             // console.log('Valid corresponding powers: ', filteredBreedPowers);
@@ -567,10 +600,9 @@
                             // Find the names corresponding to the filtered breedPowers
                             let resultNames = [];
                             filteredBreedPowers.forEach((filteredPower) => {
-                                // console.log('current power to get name for: ', filteredPower);
                                 resultNames.push(palArray[allBreedPowers.indexOf(filteredPower)].name);
                             });
-                            // console.log(resultNames);
+
 
                             resultNames.forEach(resultName => {
                                 let resultEntry = document.getElementById(`entry-${resultName}`).cloneNode(true);
