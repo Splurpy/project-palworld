@@ -19,8 +19,8 @@ header {
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
-    gap: 10px;
     align-items: center;
+    gap: 10px;
 }
 
 .modeLabel {
@@ -671,12 +671,13 @@ body::-webkit-scrollbar-thumb {
     background-color: #4661ac;
     border-radius: 10px;
     font-size: 10px;
+    font-style: italic;
     color: white;
     text-align: center;
 }
 
 .minLevelInput::placeholder {
-    opacity: 60%;
+    opacity: 100%;
     transition: 0.3s ease-in-out;
     font-size: 10px;
     font-style: italic;
