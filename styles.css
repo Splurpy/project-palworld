@@ -24,6 +24,10 @@ header {
     gap: 10px;
 }
 
+.modeDropdown:hover {
+    cursor: pointer;
+}
+
 .modeLabel {
     font-size: 50%;
     color: inherit;
@@ -58,6 +62,7 @@ header {
 .helpIcon:hover {
     opacity: 100%;
     transition: 0.1s ease-in-out;
+    cursor: pointer;
 }
 
 body {
@@ -82,6 +87,17 @@ body::-webkit-scrollbar-thumb {
     -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.5);
     background: #7fa4e0;
     border-radius: 10px;
+}
+
+body::-webkit-scrollbar-thumb:active {
+    transition: 0.1s ease-in-out;
+    background: #6583b3;
+    border-radius: 10px;
+    cursor: default;
+}
+
+body::-webkit-scrollbar-thumb:hover {
+    cursor: pointer;
 }
 
 .centerer {
@@ -115,12 +131,23 @@ body::-webkit-scrollbar-thumb {
     border-radius: 10px;
 }
 
+.appContainer::-webkit-scrollbar-thumb:active {
+    transition: 0.1s ease-in-out;
+    background: #6583b3;
+    border-radius: 10px;
+    cursor: default;
+}
+
+.appContainer::-webkit-scrollbar-thumb:hover {
+    cursor: pointer;
+}
+
 .appContainer {
     display: flex;
     overflow-x: scroll;
     overflow-y: hidden;
     width: 100vw;
-    height: 720px;
+    height: 740px;
 }
 
 .searchWrapper {
@@ -165,6 +192,7 @@ body::-webkit-scrollbar-thumb {
     margin-right: auto;
     margin-left: auto;
     padding: 10px;
+    transition: 0.2s ease-in-out;
     background-color: #01172e;
     border: 2px solid #032a50;
     border-radius: 8px;
@@ -176,6 +204,11 @@ body::-webkit-scrollbar-thumb {
 #searchBox::placeholder {
     user-select: none;
     color: rgba(255, 255, 255, 0.637);
+}
+
+#searchBox:hover {
+    transition: 0.2s ease-in-out;
+    background-color: #0c1f33;
 }
 
 .container {
@@ -199,6 +232,17 @@ body::-webkit-scrollbar-thumb {
     -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.5);
     background: #7fa4e0;
     border-radius: 10px;
+}
+
+.container::-webkit-scrollbar-thumb:active {
+    transition: 0.1s ease-in-out;
+    background: #6583b3;
+    border-radius: 10px;
+    cursor: default;
+}
+
+.container::-webkit-scrollbar-thumb:hover {
+    cursor: pointer;
 }
 
 #palContainer {
@@ -293,6 +337,7 @@ body::-webkit-scrollbar-thumb {
 .palEntry:hover {
     box-shadow: 0px 0px 15px rgb(255, 255, 255);
     transition: box-shadow 0.3s ease;
+    cursor: pointer;
 }
 
 .palEntry.selected {
@@ -303,6 +348,7 @@ body::-webkit-scrollbar-thumb {
 .palEntry.result {
     box-shadow: none;
     transition: box-shadow 0.3s ease;
+    cursor: default;
 }
 
 .palName {
@@ -505,9 +551,9 @@ body::-webkit-scrollbar-thumb {
 .filtersMenuHitbox {
     position: relative;
     z-index: -1;
-    bottom: 191px;
+    bottom: 210px;
     width: 80%;
-    height: 210px;
+    height: 220px;
     margin: auto;
     transition: 0.3s ease-in-out;
 }
@@ -521,7 +567,7 @@ body::-webkit-scrollbar-thumb {
     display: flex;
     position: relative;
     width: -webkit-fill-available;
-    height: 200px;
+    height: 220px;
     transition: 0.3s ease-in-out;
     background-color: #4661ac;
     border-style: solid;
@@ -613,7 +659,7 @@ body::-webkit-scrollbar-thumb {
     bottom: 2px;
     width: inherit;
     height: inherit;
-    max-height: 180px;
+    max-height: 200px;
     padding: 5px;
 }
 
@@ -656,8 +702,9 @@ body::-webkit-scrollbar-thumb {
 
 .workFilterButton:hover,
 .elementFilterButton:hover {
-    opacity: 80%;
+    opacity: 100%;
     transition: 0.1s ease-in-out;
+    cursor: pointer;
 }
 
 .workFilterButton {
@@ -677,7 +724,7 @@ body::-webkit-scrollbar-thumb {
     opacity: 60%;
     width: 40px;
     height: 12px;
-    transition: 0.3s ease-in-out;
+    transition: 0.2s ease-in-out;
     background-color: #4661ac;
     border-radius: 10px;
     font-size: 10px;
@@ -694,9 +741,15 @@ body::-webkit-scrollbar-thumb {
     color: white;
 }
 
+.minLevelInput:hover {
+    transition: 0.3s ease-in-out;
+    background-color: #6481d2;
+}
+
 .workFilterButtonWrapper.selected .minLevelInput,
 .workFilterButtonWrapper.selected .minLevelInput::placeholder {
     opacity: 100%;
+    background-color: #546fb7;
     transition: 0.3s ease-in-out;
 }
 
@@ -765,6 +818,17 @@ body::-webkit-scrollbar-thumb {
     border-radius: 10px;
 }
 
+.resultContainer::-webkit-scrollbar-thumb:active {
+    transition: 0.1s ease-in-out;
+    background: #6583b3;
+    border-radius: 10px;
+    cursor: default;
+}
+
+.resultContainer::-webkit-scrollbar-thumb:hover {
+    cursor: pointer;
+}
+
 /* Guide Styling Below */
 
 .fullGuideContainer {
@@ -785,8 +849,8 @@ body::-webkit-scrollbar-thumb {
 .guideContainer {
     width: 90%;
     margin: 9px;
-    padding: 4px;
     margin-bottom: 20px;
+    padding: 4px;
     background-color: #2e4d7f70;
     border-radius: 10px;
     text-align: center;
