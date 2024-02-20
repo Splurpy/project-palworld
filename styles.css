@@ -12,7 +12,15 @@ header {
     font-weight: 700;
     color: white;
     text-align: center;
-    text-shadow: 1px 2px 2px rgb(71, 157, 255), 0 0 1em rgb(255, 255, 254), 0 0 0.2em rgb(0, 96, 174);
+    text-shadow: 1px 2px 2px rgb(14, 29, 46), 0 0 1em rgba(205, 205, 203, 0.616), 0 0 0.2em rgb(169, 169, 169);
+}
+
+.modeWrapper {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
+    align-items: center;
 }
 
 .modeLabel {
@@ -22,6 +30,7 @@ header {
 }
 
 .modeDropdown {
+    user-select: none;
     width: 120px;
     background-color: inherit;
     border-radius: 10px;
@@ -32,6 +41,22 @@ header {
 
 .dropdownOption {
     background-color: #011f3d;
+}
+
+.helpIcon {
+    user-select: none;
+    position: relative;
+    opacity: 50%;
+    width: 20px;
+    height: fit-content;
+    transition: 0.1s ease-in-out;
+    font-size: 15px;
+    text-shadow: 1px 1px 3px rgb(0, 0, 0), 0 0 1em rgb(253, 253, 253), 0 0 0.2em rgb(194, 194, 194);
+}
+
+.helpIcon:hover {
+    opacity: 100%;
+    transition: 0.1s ease-in-out;
 }
 
 body {
@@ -139,6 +164,7 @@ body::-webkit-scrollbar-thumb {
 }
 
 #searchBox::placeholder {
+    user-select: none;
     color: rgba(255, 255, 255, 0.637);
 }
 
@@ -602,6 +628,7 @@ body::-webkit-scrollbar-thumb {
 }
 
 .workFilterButtonWrapper {
+    user-select: none;
     bottom: -10px;
     width: fit-content;
     height: fit-content;
@@ -609,6 +636,7 @@ body::-webkit-scrollbar-thumb {
 
 .workFilterButton,
 .elementFilterButton {
+    user-select: none;
     filter: grayscale(90%) drop-shadow(0px 00px 3px black);
     position: relative;
     opacity: 60%;

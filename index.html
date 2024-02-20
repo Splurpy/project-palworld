@@ -17,11 +17,14 @@
     <header>
         PALWORLD BREEDING CALCULATOR
         <br>
-        <label class="modeLabel" for="mode">Mode:</label>
-        <select class="modeDropdown" name="mode" id="mode" onchange="updateModeLabels();">
-            <option value="child" class="dropdownOption">Child-Oriented</option>
-            <option value="parent" class="dropdownOption">Parent-Oriented</option>
-        </select>
+        <div class="modeWrapper">
+            <label class="modeLabel" for="mode">Mode:</label>
+            <select class="modeDropdown" name="mode" id="mode" onchange="updateModeLabels();">
+                <option value="child" class="dropdownOption">Child-Oriented</option>
+                <option value="parent" class="dropdownOption">Parent-Oriented</option>
+            </select>
+            <p class="helpIcon" title="Help">?</p>
+        </div>
     </header>
 
     <body>
@@ -143,12 +146,22 @@
                                         element.id = `${pal.name}.elem1`;
                                         element.src = `./resource/img/elem/${pal.elem1}.png`;
                                         element.classList.add('element', `${pal.elem1}`);
+                                        element.title = pal.elem1.charAt(0).toUpperCase() + pal.elem1.slice(1);
+                                        if (element.title === 'Leaf') element.title = 'Grass';
+                                        else if (element.title === 'Electricity') element.title = 'Electric';
+                                        else if (element.title === 'Earth') element.title = 'Ground';
+                                        else if (element.title === 'Normal') element.title = 'Neutral';
 
                                         if (pal.elem2 !== 'none') {
                                             const element2 = document.createElement('img');
                                             element2.id = `${pal.name}.elem2`;
                                             element2.src = `./resource/img/elem/${pal.elem2}.png`;
                                             element2.classList.add('element', 'secondary', `${pal.elem2}`);
+                                            element2.title = pal.elem2.charAt(0).toUpperCase() + pal.elem2.slice(1);
+                                            if (element2.title === 'Leaf') element2.title = 'Grass';
+                                            else if (element2.title === 'Electricity') element2.title = 'Electric';
+                                            else if (element2.title === 'Earth') element2.title = 'Ground';
+                                            else if (element2.title === 'Normal') element2.title = 'Neutral';
                                             palEntry.appendChild(element2);
                                         }
 
@@ -170,6 +183,10 @@
                                             const suitabilityImg = document.createElement('img');
                                             suitabilityImg.src = `./resource/img/work/${work_suitabilities[i]}.png`;
                                             suitabilityImg.classList.add('workImg', work_suitabilities[i]);
+                                            suitabilityImg.title = work_suitabilities[i].charAt(0).toUpperCase() + work_suitabilities[i].slice(1);
+
+                                            if (suitabilityImg.title === 'GenElec') suitabilityImg.title = 'Electricity Generation';
+                                            else if (suitabilityImg.title === 'Medicine') suitabilityImg.title += ' Production';
                                             if (pal[work_suitabilities[i]] == 0) {
                                                 suitabilityImg.style.filter = 'grayscale(100%)';
                                             }
@@ -257,6 +274,12 @@
                         elementFilterButton.src = `./resource/img/elem/${elementValue}.png`;
                         elementFilterButton.classList.add('elementFilterButton', `${elementValue}`);
 
+                        elementFilterButton.title = elementValue.charAt(0).toUpperCase() + elementValue.slice(1);
+                        if (elementFilterButton.title === 'Leaf') elementFilterButton.title = 'Grass';
+                        else if (elementFilterButton.title === 'Electricity') elementFilterButton.title = 'Electric';
+                        else if (elementFilterButton.title === 'Earth') elementFilterButton.title = 'Ground';
+                        else if (elementFilterButton.title === 'Normal') elementFilterButton.title = 'Neutral';
+
                         elementFilterButton.addEventListener('click', () => {
                             elementFilterButton.classList.toggle('selected');
                             filterResults(wrapper); // Trigger filtering algorithm
@@ -274,6 +297,10 @@
                         workFilterButton.src = `./resource/img/work/${suitability}.png`;
                         workFilterButton.classList.add('workFilterButton', `${suitability}`);
                         workFilterButtonWrapper.appendChild(workFilterButton);
+
+                        workFilterButtonWrapper.title = suitability.charAt(0).toUpperCase() + suitability.slice(1);
+                        if (workFilterButtonWrapper.title === 'GenElec') workFilterButtonWrapper.title = 'Electricity Generation';
+                        else if (workFilterButtonWrapper.title === 'Medicine') workFilterButtonWrapper.title += ' Production';
 
                         workFilterButton.addEventListener('click', () => {
                             event.target.parentElement.classList.toggle('selected');
@@ -377,27 +404,21 @@
 
                     // Filter panel2 when in parent mode
                     let wrapperId = currEntry.parentElement.parentElement.parentElement.id;
-                    if (mode === parentMode && wrapperId === 'search-1') {
+                    if (mode === parentMode && wrapperId === 'search-1' && document.querySelector('#search-1').getElementsByClassName('selected').length > 0) {
+
                         let childPanel = document.querySelector('#search-1');
-                        if (childPanel.getElementsByClassName('selected').length > 0) {
+                        if (childPanel.querySelectorAll('.palEntry.selected').length > 0) {
                             let parent1Panel = document.querySelector('#search-2');
                             let childEntry = childPanel.getElementsByClassName('selected')[0];
                             let childName = childEntry.getElementsByClassName('palName')[0].textContent;
 
-                            // console.log('Child selected: ', childName);
 
                             // Only show elements within parent1Panel (#search-2) that are possible parents of the selected child
-
-                            // TODO not necessarily here, but unhide hidden entries
-
                             let allBreedPowers = palArray.map((pal) => pal.breedPower);
 
 
                             let childPower = parseInt(childEntry.getAttribute('data-breedPower'));
                             let parentPower = parseInt(currEntry.getAttribute('data-breedPower'));
-
-                            // console.log('childPower: ', childPower);
-                            // console.log(`parentPower | ${palName.textContent} : `, parentPower);
 
                             let filteredBreedPowers = [];
                             let exactPower;
@@ -405,27 +426,54 @@
                                 if (Math.floor((parentPower + power + 1) / 2) === childPower) exactPower = power;
                             });
 
-                            // console.log('Exact power: ', exactPower);
-
                             // Filter the breedPowers to get the ones within the range of lowerBound and upperBound
                             filteredBreedPowers = allBreedPowers.filter(breedPower =>
                                 breedPower >= exactPower - 10 && breedPower <= exactPower + 10
                             );
 
                             let resultNames = [];
-                            filteredBreedPowers.forEach((filteredPower) => {
-                                resultNames.push(palArray[allBreedPowers.indexOf(filteredPower)].name);
-                            });
 
-                            let entryElement = parent1Panel.querySelector(`[data-breedPower='${parentPower}']`);
+                            let unique = getUniqueParents(childEntry.getElementsByClassName('palName')[0].textContent);
+                            if (unique.length > 0) {
+                                let entryElement = parent1Panel.querySelector(`[data-breedpower='${parentPower}']`);
+                                if (parentPower === 1240 && currEntry.id.includes('Special')) {
+                                    entryElement = Array.from(parent1Panel.querySelectorAll(`[data-breedpower='${parentPower}']`))[1];
+                                }
 
-                            if (resultNames.length > 0) {
-                                console.log('Showing parent: ', palName.textContent);
-                                if (entryElement.classList.contains('invalidParent')) entryElement.classList.toggle('invalidParent');
+                                if (unique.includes(palName.textContent)) {
+                                    if (entryElement.classList.contains('invalidParent')) entryElement.classList.toggle('invalidParent');
+                                } else {
+                                    if (!entryElement.classList.contains('invalidParent')) entryElement.classList.toggle('invalidParent');
+                                }
+
                             } else {
-                                console.log('Hiding parent: ', palName.textContent);
-                                if (!entryElement.classList.contains('invalidParent')) entryElement.classList.toggle('invalidParent');
+                                filteredBreedPowers.forEach((filteredPower) => {
+                                    resultNames.push(palArray[allBreedPowers.indexOf(filteredPower)].name);
+                                });
+
+                                let entryElement = parent1Panel.querySelector(`[data-breedpower='${parentPower}']`);
+                                if (parentPower === 1240 && currEntry.id.includes('Special')) {
+                                    entryElement = Array.from(parent1Panel.querySelectorAll(`[data-breedpower='${parentPower}']`))[1];
+                                }
+
+                                if (resultNames.length > 0) {
+                                    if (entryElement.classList.contains('invalidParent')) entryElement.classList.toggle('invalidParent');
+                                } else {
+                                    if (!entryElement.classList.contains('invalidParent')) entryElement.classList.toggle('invalidParent');
+                                }
                             }
+                        }
+                    } else if ((mode === parentMode && wrapperId === 'search-1' && document.querySelector('#search-1').getElementsByClassName('selected').length < 1) || mode === childMode) {
+                        // Unhide hidden entries
+                        let parent1Panel = document.querySelector('#search-2');
+                        let currPalObject = palArray[i];
+                        let parent1PanelEntry = Array.from(parent1Panel.querySelectorAll(`[data-breedpower='${currPalObject.breedPower}']`))[0];
+                        if (currPalObject.breedPower === 1240 && currEntry.id.includes('Special')) {
+                            parent1PanelEntry = Array.from(parent1Panel.querySelectorAll(`[data-breedpower='${currPalObject.breedPower}']`))[1];
+                        }
+
+                        if (parent1PanelEntry.classList.contains('invalidParent')) {
+                            parent1PanelEntry.classList.toggle('invalidParent');
                         }
                     }
 
@@ -463,7 +511,6 @@
                             } else {
                                 selectedPalEntry2 = selectedPalEntry;
                             }
-                            // console.log(`[DEBUG] 1: ${this.selectedPalEntry1} | 2: ${this.selectedPalEntry2}`);
                             filterResults(wrapper);
                             calculateResult();
                         });
@@ -494,7 +541,7 @@
             }
 
             // Array of combos (Length 3 array of parent1, parent2, and child)
-            // Pass in parent1, parent2, and child as palNames (strings), return null if not a unique combo
+            // Pass in parent1, child as palNames (strings), return null if not a unique combo
             function getUniqueParent(parent1, child) {
                 let result = null;
                 uniqueCombos.forEach((combo) => {
@@ -512,6 +559,19 @@
                 return result;
             }
 
+            // Array of combos (Length 3 array of parent1, parent2, and child)
+            // Pass in child as palName (string), return null if not a unique combo, return possible parent combinations
+            function getUniqueParents(child) {
+                let result = [];
+                uniqueCombos.forEach((combo) => {
+                    let parents = [combo[0], combo[1]];
+                    if (child === combo[2]) {
+                        result = [combo[0], combo[1], child];
+                    }
+                });
+                return result;
+            }
+
 
             function calculateResult() {
                 let field = document.getElementsByClassName('resultField')[0];
@@ -520,11 +580,9 @@
                 selectedPals = Array.from(document.getElementsByClassName('palEntry selected'));
 
                 // Two pals have NOT yet been selected
-                // console.log('Children: ', field.children[0]);
                 if (selectedPals.length < 2) {
                     if (field.childElementCount > 0) {
                         Array.from(field.children).forEach((child) => {
-                            console.log(child);
                             removeFadeOut(child);
                         })
                     }
@@ -553,7 +611,6 @@
                         if (field.childElementCount > 0) {
                             removeFadeOut(field.children[0]);
                         }
-                        // console.log(resultName);
 
                         let resultEntry = document.getElementById(`entry-${resultName}`).cloneNode(true);
                         if (resultEntry.classList.contains('selected')) {
@@ -595,12 +652,20 @@
 
                             // Filter the breedPowers to get the ones within the range of lowerBound and upperBound
                             filteredBreedPowers = allBreedPowers.filter(breedPower => breedPower >= exactPower - 10 && breedPower <= exactPower + 10);
-                            // console.log('Valid corresponding powers: ', filteredBreedPowers);
 
                             // Find the names corresponding to the filtered breedPowers
                             let resultNames = [];
+                            let gumossCount = 0;
                             filteredBreedPowers.forEach((filteredPower) => {
-                                resultNames.push(palArray[allBreedPowers.indexOf(filteredPower)].name);
+                                if (filteredPower === 1240) {
+                                    if (gumossCount === 1) {
+                                        resultNames.push(palArray.filter(palObject => palObject.name.includes('Special'))[0].name);
+
+                                    } else resultNames.push(palArray[allBreedPowers.indexOf(filteredPower)].name);
+
+                                    gumossCount++;
+
+                                } else resultNames.push(palArray[allBreedPowers.indexOf(filteredPower)].name);
                             });
 
 
@@ -611,7 +676,12 @@
                                 }
                                 resultEntry.classList.toggle('result');
                                 resultEntry.style.display = 'block';
-                                field.appendChild(resultEntry);
+                                if (!(palNames[0].includes('Gumoss') && !palNames[0].includes('Special') && resultName.includes('Special'))) {
+                                    field.appendChild(resultEntry);
+                                }
+                                else if ((palNames[0].includes('Gumoss') && !palNames[1].includes('Special') && resultName.includes('Special'))) {
+                                    field.appendChild(resultEntry);
+                                }
                             })
                         }
                     }
@@ -638,6 +708,8 @@
                     resultLabel.textContent = 'Parent 2';
                 }
                 resultField.classList.toggle('parentMode');
+                filterResults(document.getElementById('search-1'));
+                calculateResult();
             }
         </script>
     </body>
