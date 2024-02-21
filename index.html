@@ -7,14 +7,13 @@
         <title>Pal Entries</title>
         <link rel="stylesheet" href="./styles.css">
 
-        <script> // Mode defs
+        <script> // Mode defs and dbPath def
             const parentMode = 'parent'; // calculate the other parent when given the child and one parent
             const childMode = 'child'; // calculate the child of two chosen parents
             var mode = childMode;
-        </script>
 
-        <script> // db path def
-            let dbPath = 'project-palworld/db/paldb.db';
+            // filepath to the database file
+            let dbPath = '../project-palworld/db/paldb.db';
         </script>
     </head>
 
@@ -47,6 +46,7 @@
                         <div id="palContainer" class="container palContainer"></div>
                         <script src="./dist/sql-wasm.js"></script>
                         <script> // Load entries and search panels
+
                             var palArray = new Array();
                             var uniqueCombos = new Array();
                             const config = {
