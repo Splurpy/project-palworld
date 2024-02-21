@@ -38,7 +38,7 @@
                     <div class="searchPanel">
                         <div class="topPortion">
                             <input type="text" class="searchBox" id="searchBox" placeholder="Search by name..."
-                                oninput="filterResults(this.parentElement.parentElement);">
+                                oninput="filterResults(this.parentElement.parentElement.parentElement);">
                         </div>
                         <div id="palContainer" class="container palContainer"></div>
                         <script src="./dist/sql-wasm.js"></script>
@@ -423,6 +423,18 @@
                 </div>
             </div>
         </div>
+        <footer>
+            <hr style="width: 99%;">
+            <br>
+            <p class="text subHeaderText offset footerText italicText">
+                | Xavier Reardon
+                <br>
+                <br>
+            </p>
+            <p class="text italicText emphasizedText offset footerText">
+                **This site nor its author are affiliated with Pocket Pair, Inc.
+            </p>
+        </footer>
         <script>
             function addFilters() {
                 const work_suitabilities = ['kindling', 'watering', 'planting', 'genElec', 'handiwork', 'gathering', 'lumbering', 'mining', 'medicine', 'cooling', 'transporting', 'farming'];
@@ -531,7 +543,7 @@
 
                     // Check if the pal entry matches the search filter
                     if (txtValue.toUpperCase().indexOf(filter) === -1) {
-                        conditions.push(false);
+                        conditions.push('false');
                     }
 
                     // Filter by element
@@ -541,7 +553,7 @@
 
                         if (!(elem1 && elem1.classList.contains(selectedElement.classList[1])) &&
                             !(elem2 && elem2.classList.contains(selectedElement.classList[1]))) {
-                            conditions.push(false);
+                            conditions.push('false');
                         }
                     });
 
@@ -561,10 +573,10 @@
                         // If this palEntry has the following selected workType
                         if (workEntry) {
                             let workLvl = workEntry.textContent;
-                            if (workLvl >= minLvl) conditions.push(true);
-                            else conditions.push(false);
+                            if (workLvl >= minLvl) conditions.push('true');
+                            else conditions.push('false');
                         } else {
-                            conditions.push(false);
+                            conditions.push('false');
                         }
                     });
 
@@ -643,8 +655,10 @@
                         }
                     }
 
+                    // TODO INVESTIGATE STRANGE BEHAVIOR - NOT FILTERING PROPERLY
+
                     // Display entry if it contains adequate levels
-                    if (conditions.includes(false)) shouldDisplay = false;
+                    if (conditions.includes('false')) shouldDisplay = false;
 
                     // Update the display of the pal entry
                     if (shouldDisplay) {

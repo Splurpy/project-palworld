@@ -96,7 +96,7 @@ body::-webkit-scrollbar-thumb:active {
     cursor: default;
 }
 
-body::-webkit-scrollbar-thumb:hover {
+body::-webkit-scrollbar-thumb:focus {
     cursor: pointer;
 }
 
@@ -138,7 +138,7 @@ body::-webkit-scrollbar-thumb:hover {
     cursor: default;
 }
 
-.appContainer::-webkit-scrollbar-thumb:hover {
+.appContainer::-webkit-scrollbar-thumb:focus {
     cursor: pointer;
 }
 
@@ -241,7 +241,7 @@ body::-webkit-scrollbar-thumb:hover {
     cursor: default;
 }
 
-.container::-webkit-scrollbar-thumb:hover {
+.container::-webkit-scrollbar-thumb:focus {
     cursor: pointer;
 }
 
@@ -825,7 +825,7 @@ body::-webkit-scrollbar-thumb:hover {
     cursor: default;
 }
 
-.resultContainer::-webkit-scrollbar-thumb:hover {
+.resultContainer::-webkit-scrollbar-thumb:focus {
     cursor: pointer;
 }
 
@@ -890,4 +890,18 @@ hr {
 
 .detailsText {
     font-size: 12px;
+}
+
+.offset {
+    margin-left: 15px;
+}
+
+.footerText {
+    color: rgba(172, 172, 172, 0.874);
+}
+
+footer {
+    width: 100%;
+    text-align: left;
+    background-color: #041628;
 }
