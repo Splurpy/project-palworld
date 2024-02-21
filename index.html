@@ -80,7 +80,7 @@
                                     // Reading query as pal objects
                                     static async readPals() {
                                         try {
-                                            const response = await fetch('../db/paldb.db');
+                                            const response = await fetch('/project-palworld/db/paldb.db');
                                             const buffer = await response.arrayBuffer();
                                             const db = new SQL.Database(new Uint8Array(buffer));
                                             const query = "SELECT pd.IndexOrder, bp.DexNum, bp.Name, pd.Rarity, pd.ElementType1, pd.ElementType2, pd.RideSprintSpeed, bp.Power, pd.WorkSuitability_EmitFlame, pd.WorkSuitability_Watering, pd.WorkSuitability_Seeding, pd.WorkSuitability_GenerateElectricity, pd.WorkSuitability_Handcraft, pd.WorkSuitability_Collection, pd.WorkSuitability_Deforest, pd.WorkSuitability_Mining, pd.WorkSuitability_ProductMedicine, pd.WorkSuitability_Cool,  pd.WorkSuitability_Transport,  pd.WorkSuitability_MonsterFarm FROM breeding_power bp JOIN pal_data pd ON bp.Name = pd.Name ORDER BY bp.name ASC";
