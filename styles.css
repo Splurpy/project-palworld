@@ -16,6 +16,13 @@ header {
     text-align: center;
 }
 
+.subText {
+    font-size: 20px;
+    padding-top: 5px;
+    font-style: italic;
+    color: rgb(233, 233, 233);
+}
+
 .modeWrapper {
     display: flex;
     flex-wrap: wrap;
