@@ -18,8 +18,9 @@
     </head>
 
     <header>
-        PALCHECK
-        <div class="subText">~ PALWORLD BREEDING CALCULATOR ~</div>
+        <h1 class="guideLabel" style="margin-bottom: 10px; padding-right: 15px;">PALCHECK
+            <div class="subText">~ PALWORLD BREEDING CALCULATOR ~</div>
+        </h1>
         <div class="modeWrapper">
             <label class="modeLabel" for="mode">Mode:</label>
             <select class="modeDropdown" name="mode" id="mode" onchange="updateModeLabels();">
@@ -30,6 +31,43 @@
         </div>
         <hr>
     </header>
+
+    <div class="splash">
+        <h1 class="guideLabel" style="padding-top: 200px;">PALCHECK
+            <div class="subText">~ PALWORLD BREEDING CALCULATOR ~</div>
+        </h1>
+        <div class="splashContainer">
+            <span class="progress"></span>
+            <br><br>
+            <h1 class="loadingLabel guideLabel guideHeader">
+                Initializing Database...
+            </h1>
+        </div>
+    </div>
+
+    <script>
+        // Initiate splash/loading screen
+        var loadingSplash = document.querySelector('.splash');
+        var loadingLabel = document.querySelector('.loadingLabel');
+
+        // Change text during the 2000ms timeout
+        setTimeout(() => {
+            loadingLabel.textContent = 'Loading Resources...';
+        }, 650);
+
+        setTimeout(() => {
+            loadingLabel.textContent = 'Initializing Webapp...';
+        }, 1400);
+
+        // Wait for half a second before executing
+        setTimeout(() => {
+            loadingSplash.style.opacity = 0;
+            setTimeout(() => {
+                loadingSplash.classList.add('hidden');
+            }, 610);
+            document.documentElement.style.overflowY = 'scroll';
+        }, 2500);
+    </script>
 
     <body>
         <div class="appContainer">

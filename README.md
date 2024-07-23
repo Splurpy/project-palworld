@@ -1,4 +1,4 @@
-# Project Palworld
+# PalCheck Breeding Calculator
 Web-application currently used for calculating "breeding combinations" for popular game *"Palworld"*.
 
 ## **NOTE:** This tool does not account for anything after *Palworld* version 0.1.5.1! Any updates to this tool are on a contingent basis.
