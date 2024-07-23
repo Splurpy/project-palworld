@@ -7,10 +7,13 @@
         <title>Pal Entries</title>
         <link rel="stylesheet" href="./styles.css">
 
-        <script> // Mode defs
+        <script> // Mode defs and dbPath def
             const parentMode = 'parent'; // calculate the other parent when given the child and one parent
             const childMode = 'child'; // calculate the child of two chosen parents
             var mode = childMode;
+
+            // filepath to the database file
+            let dbPath = '/project-palworld/db/paldb.db';
         </script>
     </head>
 
@@ -38,15 +41,16 @@
                     <div class="searchPanel">
                         <div class="topPortion">
                             <input type="text" class="searchBox" id="searchBox" placeholder="Search by name..."
-                                oninput="filterResults(this.parentElement.parentElement);">
+                                oninput="filterResults(this.parentElement.parentElement.parentElement);">
                         </div>
                         <div id="palContainer" class="container palContainer"></div>
                         <script src="./dist/sql-wasm.js"></script>
                         <script> // Load entries and search panels
+
                             var palArray = new Array();
                             var uniqueCombos = new Array();
                             const config = {
-                                locateFile: filename => `/dist/${filename}`
+                                locateFile: filename => `/project-palworld/dist/${filename}`
                             };
 
                             initSqlJs(config).then(function (SQL) {
@@ -80,7 +84,7 @@
                                     // Reading query as pal objects
                                     static async readPals() {
                                         try {
-                                            const response = await fetch('../db/paldb.db');
+                                            const response = await fetch(dbPath);
                                             const buffer = await response.arrayBuffer();
                                             const db = new SQL.Database(new Uint8Array(buffer));
                                             const query = "SELECT pd.IndexOrder, bp.DexNum, bp.Name, pd.Rarity, pd.ElementType1, pd.ElementType2, pd.RideSprintSpeed, bp.Power, pd.WorkSuitability_EmitFlame, pd.WorkSuitability_Watering, pd.WorkSuitability_Seeding, pd.WorkSuitability_GenerateElectricity, pd.WorkSuitability_Handcraft, pd.WorkSuitability_Collection, pd.WorkSuitability_Deforest, pd.WorkSuitability_Mining, pd.WorkSuitability_ProductMedicine, pd.WorkSuitability_Cool,  pd.WorkSuitability_Transport,  pd.WorkSuitability_MonsterFarm FROM breeding_power bp JOIN pal_data pd ON bp.Name = pd.Name ORDER BY bp.name ASC";
@@ -115,7 +119,7 @@
                                             throw error;
                                         }
 
-                                        const response = await fetch('../db/paldb.db');
+                                        const response = await fetch(dbPath);
                                         const buffer = await response.arrayBuffer();
                                         const db = new SQL.Database(new Uint8Array(buffer));
                                         const query = "SELECT * FROM unique_combos";
@@ -423,6 +427,18 @@
                 </div>
             </div>
         </div>
+        <footer>
+            <hr style="width: 99%;">
+            <br>
+            <p class="text subHeaderText offset footerText italicText">
+                | Xavier Reardon
+                <br>
+                <br>
+            </p>
+            <p class="text italicText emphasizedText offset footerText">
+                **This site nor its author are affiliated with Pocket Pair, Inc.
+            </p>
+        </footer>
         <script>
             function addFilters() {
                 const work_suitabilities = ['kindling', 'watering', 'planting', 'genElec', 'handiwork', 'gathering', 'lumbering', 'mining', 'medicine', 'cooling', 'transporting', 'farming'];
@@ -531,7 +547,7 @@
 
                     // Check if the pal entry matches the search filter
                     if (txtValue.toUpperCase().indexOf(filter) === -1) {
-                        conditions.push(false);
+                        conditions.push('false');
                     }
 
                     // Filter by element
@@ -541,7 +557,7 @@
 
                         if (!(elem1 && elem1.classList.contains(selectedElement.classList[1])) &&
                             !(elem2 && elem2.classList.contains(selectedElement.classList[1]))) {
-                            conditions.push(false);
+                            conditions.push('false');
                         }
                     });
 
@@ -561,10 +577,10 @@
                         // If this palEntry has the following selected workType
                         if (workEntry) {
                             let workLvl = workEntry.textContent;
-                            if (workLvl >= minLvl) conditions.push(true);
-                            else conditions.push(false);
+                            if (workLvl >= minLvl) conditions.push('true');
+                            else conditions.push('false');
                         } else {
-                            conditions.push(false);
+                            conditions.push('false');
                         }
                     });
 
@@ -643,8 +659,10 @@
                         }
                     }
 
+                    // TODO INVESTIGATE STRANGE BEHAVIOR - NOT FILTERING PROPERLY
+
                     // Display entry if it contains adequate levels
-                    if (conditions.includes(false)) shouldDisplay = false;
+                    if (conditions.includes('false')) shouldDisplay = false;
 
                     // Update the display of the pal entry
                     if (shouldDisplay) {
