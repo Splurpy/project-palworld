@@ -7,7 +7,7 @@ To report any bugs or inaccuracies, please submit an issue here, on gitHub.
 Live URL: https://splurpy.github.io/project-palworld/
 
 # What I Learned
-- HTML5 Hosting
+- Simple HTML5 Hosting
 - CSS Animations and Styling
-- JavaScript applications
+- JavaScript Scripting
 - Local SQLite Database Loading & Querying
